@@ -35,6 +35,10 @@ void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	StatusType = ownerCharacter->StatComponent->GetStatus();
 
 	
+	PawnOwnerIsValid();
 
+}
 
+void UCAnimInstance::PawnOwnerIsValid()
+{
 }

@@ -14,6 +14,8 @@ public:
 	virtual void NativeBeginPlay() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
+	virtual void PawnOwnerIsValid();
+
 protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		float Speed;
