@@ -5,6 +5,8 @@
 #include "CStatComponent.generated.h"
 
 
+//--struct---------------------------------------------------------------------
+
 USTRUCT(Atomic, BlueprintType)
 struct FStat
 {
@@ -46,6 +48,42 @@ public:
 };
 
 
+//--enum---------------------------------------------------------------------
+
+UENUM(BlueprintType)
+enum class EStateType : uint8
+{
+	Idling,
+	Rolling,
+	Attacking,
+	Hitted,
+	Groggy,
+	Dying
+};
+
+UENUM(BlueprintType)
+enum class EStatusType : uint8
+{
+	Unarmed,
+	Flight,
+	Climbing,
+	Swimming,
+	Melee
+};
+
+UENUM(BlueprintType)
+enum class ESpeedType : uint8
+{
+	Stop,
+	Walk,
+	Joging,
+	Sprint
+};
+
+
+
+//--class---------------------------------------------------------------------
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PORTFOLIO_CPP_API UCStatComponent : public UActorComponent
 {
@@ -68,6 +106,9 @@ public:
 	FORCEINLINE float GetCritical_Damage() { return Stat.Critical_Damage; }
 	FORCEINLINE float GetCritical_Chance() { return Stat.Critical_Chance; }
 
+	FORCEINLINE EStateType GetState() { return StateType; }
+	FORCEINLINE EStatusType GetStatus() { return StatusType; }
+
 
 	//set
 	FORCEINLINE void SetHP(float input) { Stat.HP += input; }
@@ -77,14 +118,44 @@ public:
 	FORCEINLINE void SetCritical_Damage(float input) { Stat.Critical_Damage += input; }
 	FORCEINLINE void SetCritical_Chance(float input) { Stat.Critical_Chance += input; }
 
-	FORCEINLINE void SetWalk(float input) { Speed.Walk = input; }
-	FORCEINLINE void SetJoging(float input) { Speed.Joging = input; }
-	FORCEINLINE void SetSprint(float input) { Speed.Sprint = input; }
+	FORCEINLINE void SetWalkSpeed(float input) { Speed.Walk = input; }
+	FORCEINLINE void SetJogingSpeed(float input) { Speed.Joging = input; }
+	FORCEINLINE void SetSprintSpeed(float input) { Speed.Sprint = input; }
+
+	FORCEINLINE void SetState(EStateType input) { StateType = input; }
+	FORCEINLINE void SetStatus(EStatusType input) { StatusType = input; }
+
+	FORCEINLINE void SetCanMove(bool input) { bCanMove = input; }
+	FORCEINLINE void SetCameraCanMove(bool input) { bCameraCanMove = input; }
+
+
+	//Is
+	FORCEINLINE bool IsCanMove() { return bCanMove; }
+	FORCEINLINE bool IsCameraCanMove() { return bCameraCanMove; }
+
+	FORCEINLINE bool IsState(EStateType input) { if (StateType == input) return true; return false; }
+	FORCEINLINE bool IsStatus(EStatusType input) { if (StatusType == input) return true; return false; }
+
+	
+
+
+
+public:
+	//Set
+	void SetSpeed(ESpeedType input);
+
 
 
 private:
 	class ABaseCharacter* OwnerCharacter;
 
+	//현재의 상태를 조절하는 열거형
+	EStateType StateType = EStateType::Idling;
+	EStatusType StatusType = EStatusType::Unarmed;
+
 	FStat Stat;
 	FSpeed Speed;
+
+	bool bCanMove = true;
+	bool bCameraCanMove = true;
 };

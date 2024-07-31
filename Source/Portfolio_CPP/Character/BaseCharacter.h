@@ -14,27 +14,6 @@ enum class ECharacterType : uint8
 	Boss
 };
 
-UENUM(BlueprintType)
-enum class EStateType : uint8
-{
-	Idling,
-	Rolling,
-	Attacking,
-	Hitted,
-	Groggy,
-	Dying
-};
-
-UENUM(BlueprintType)
-enum class ESpeedType : uint8
-{
-	Stop,
-	Walk,
-	Joging,
-	Sprint
-};
-
-
 
 UCLASS()
 class PORTFOLIO_CPP_API ABaseCharacter : public ACharacter
@@ -59,7 +38,25 @@ public:
 	FORCEINLINE FStat GetStat() { return BaseStat; }
 
 
-private:
+protected:
+	virtual void OnMoveForward(float InAxis);
+	void OnMoveForward_Unarmed(float InAxis);
+
+	virtual void OnMoveRight(float InAxis);
+	void OnMoveRight_Unarmed(float InAxis);
+
+	void OnHorizontalLook(float InAxis);
+	void OnVerticalLook(float InAxis);
+	void OnCameraZoom(float InAxis);
+
+	
+	virtual void OnJump();
+	virtual void OffJump();
+
+	
+
+
+public:
 	//Scene Component
 	UPROPERTY(EditAnywhere, Category = Camera)
 		class USpringArmComponent* SpringArm;
@@ -68,21 +65,17 @@ private:
 		class UCameraComponent* Camera;
 
 
-private:
+public:
 	//Actor Component
 	UPROPERTY(VisibleDefaultsOnly)
 		class UCStatComponent* StatComponent;
 
 
-
-private:
-	//현재의 상태를 조절하는 열거형
-	EStateType StateType;
-
-
+protected:
 	//캐릭터의 타입을 결정하는 열거형
 	ECharacterType CharacterType;
 	
+private:
 
 	//Speed
 	UPROPERTY(EditAnywhere, Category = "Speed")
