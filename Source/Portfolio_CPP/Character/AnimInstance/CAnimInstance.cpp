@@ -18,6 +18,8 @@ void UCAnimInstance::NativeBeginPlay()
 void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
+
+
 	ABaseCharacter* ownerCharacter = Cast<ABaseCharacter>(TryGetPawnOwner());
 	CheckNull(ownerCharacter);
 

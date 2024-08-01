@@ -67,8 +67,8 @@ public:
 
 public:
 	//Actor Component
-	UPROPERTY(VisibleDefaultsOnly)
-		class UCStatComponent* StatComponent;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+		UCStatComponent* StatComponent;
 
 
 protected:
