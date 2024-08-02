@@ -44,8 +44,7 @@ ABaseCharacter::ABaseCharacter()
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	//CLog::Print(StatComponent->GetOwner()->GetName());
+
 }
 
 void ABaseCharacter::Tick(float DeltaTime)
@@ -74,7 +73,7 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 void ABaseCharacter::OnMoveForward(float InAxis)
 {
 	CheckTrue(FMath::IsNearlyZero(InAxis));
-	CheckFalse(StatComponent->IsCanMove());	
+	CheckFalse(GetStatComponent()->IsCanMove());
 }
 
 void ABaseCharacter::OnMoveForward_Unarmed(float InAxis)
@@ -88,7 +87,7 @@ void ABaseCharacter::OnMoveForward_Unarmed(float InAxis)
 void ABaseCharacter::OnMoveRight(float InAxis)
 {
 	CheckTrue(FMath::IsNearlyZero(InAxis));
-	CheckFalse(StatComponent->IsCanMove());
+	CheckFalse(GetStatComponent()->IsCanMove());
 }
 
 void ABaseCharacter::OnMoveRight_Unarmed(float InAxis)

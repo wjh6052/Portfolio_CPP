@@ -42,12 +42,12 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void ACPlayer::OnMoveForward(float InAxis)
 {	
 	if(InAxis == 0)
-		if(StatComponent->GetSpeedType() != ESpeedType::Walk)
-			StatComponent->SetSpeed(ESpeedType::Joging);
+		if(GetStatComponent()->IsSpeedType(ESpeedType::Walk))
+			GetStatComponent()->SetSpeed(ESpeedType::Joging);
 
-	CheckFalse(StatComponent->IsCanMove());
+	CheckFalse(GetStatComponent()->IsCanMove());
 
-	switch (StatComponent->GetStatus())
+	switch (GetStatComponent()->GetStatus())
 	{
 
 	case EStatusType::Flight:
@@ -78,7 +78,7 @@ void ACPlayer::OnMoveRight(float InAxis)
 {
 	Super::OnMoveRight(InAxis);
 
-	switch (StatComponent->GetStatus())
+	switch (GetStatComponent()->GetStatus())
 	{
 
 	case EStatusType::Flight:
@@ -107,7 +107,7 @@ void ACPlayer::OnMoveRight_Flight(float InAxis)
 
 void ACPlayer::OnJump()
 {
-	switch (StatComponent->GetState())
+	switch (GetStatComponent()->GetState())
 	{
 
 	case EStateType::Idling:
@@ -118,7 +118,7 @@ void ACPlayer::OnJump()
 		break;
 	}
 
-	switch (StatComponent->GetStatus())
+	switch (GetStatComponent()->GetStatus())
 	{
 
 	case EStatusType::Unarmed:
@@ -151,14 +151,14 @@ void ACPlayer::OffJump()
 
 void ACPlayer::OnWalk()
 {
-	switch (StatComponent->GetSpeedType())
+	switch (GetStatComponent()->GetSpeedType())
 	{
 	case ESpeedType::Walk:
-		StatComponent->SetSpeed(ESpeedType::Joging);
+		GetStatComponent()->SetSpeed(ESpeedType::Joging);
 		break;
 
 	case ESpeedType::Joging:
-		StatComponent->SetSpeed(ESpeedType::Walk);
+		GetStatComponent()->SetSpeed(ESpeedType::Walk);
 		break;
 
 	default:
@@ -172,7 +172,7 @@ void ACPlayer::OnRun()
 	++Run;
 
 	if (Run >= 2)
-		StatComponent->SetSpeed(ESpeedType::Run);
+		GetStatComponent()->SetSpeed(ESpeedType::Run);
 }
 
 void ACPlayer::OffRun()
@@ -188,13 +188,13 @@ void ACPlayer::RunDelay()
 void ACPlayer::OnSprint()
 {
 	Sprint = true;
-	if (StatComponent->IsStatus(EStatusType::Flight))
+	if (GetStatComponent()->IsStatus(EStatusType::Flight))
 	{
 
 
 		return;
 	}
-	CheckFalse(StatComponent->IsState(EStateType::Idling));
+	CheckFalse(GetStatComponent()->IsState(EStateType::Idling));
 
 
 	CheckNull(ActionDataAsset);
@@ -204,7 +204,7 @@ void ACPlayer::OnSprint()
 void ACPlayer::OffSprint()
 {
 	Sprint = false;
-	CheckFalse(StatComponent->IsStatus(EStatusType::Flight));
+	CheckFalse(GetStatComponent()->IsStatus(EStatusType::Flight));
 
 }
 

@@ -110,17 +110,17 @@ protected:
 
 public:
 	//get
-	FORCEINLINE float GetHP() { return Stat.HP; }
-	FORCEINLINE float GetHP_Max() { return Stat.HP_Max; }
-	FORCEINLINE float GetDamage() { return Stat.Damage; }
-	FORCEINLINE float GetDefense() { return Stat.Defense; }
-	FORCEINLINE float GetCritical_Damage() { return Stat.Critical_Damage; }
-	FORCEINLINE float GetCritical_Chance() { return Stat.Critical_Chance; }
+	FORCEINLINE float GetHP() const { return Stat.HP; }
+	FORCEINLINE float GetHP_Max() const { return Stat.HP_Max; }
+	FORCEINLINE float GetDamage() const { return Stat.Damage; }
+	FORCEINLINE float GetDefense() const { return Stat.Defense; }
+	FORCEINLINE float GetCritical_Damage() const { return Stat.Critical_Damage; }
+	FORCEINLINE float GetCritical_Chance() const { return Stat.Critical_Chance; }
 
 	
-	FORCEINLINE EStateType GetState() { return StateType; }
-	FORCEINLINE EStatusType GetStatus() { return StatusType; }
-	FORCEINLINE ESpeedType GetSpeedType() { return SpeedType; }
+	FORCEINLINE EStateType GetState() const { return StateType; }
+	FORCEINLINE EStatusType GetStatus() const { return StatusType; }
+	FORCEINLINE ESpeedType GetSpeedType() const { return SpeedType; }
 
 
 	//set
@@ -146,6 +146,8 @@ public:
 	//Is
 	FORCEINLINE bool IsCanMove() { return bCanMove; }
 	FORCEINLINE bool IsCameraCanMove() { return bCameraCanMove; }
+
+	FORCEINLINE bool IsSpeedType(ESpeedType input) { if (SpeedType == input) return true; return false; }
 
 	FORCEINLINE bool IsState(EStateType input) { if (StateType == input) return true; return false; }
 	FORCEINLINE bool IsStatus(EStatusType input) { if (StatusType == input) return true; return false; }

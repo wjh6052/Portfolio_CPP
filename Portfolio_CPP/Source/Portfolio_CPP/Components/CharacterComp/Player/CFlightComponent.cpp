@@ -113,15 +113,15 @@ void UCFlightComponent::SetFlightMovementParam(bool input)
 	}
 	else
 	{
-		OwnerPlayer->GetCharacterMovement()->BrakingDecelerationFlying = OwnerPlayer->StatComponent->Speed.BrakingDeceleration;
-		OwnerPlayer->GetCharacterMovement()->RotationRate = OwnerPlayer->StatComponent->Speed.RotationRate;
+		OwnerPlayer->GetCharacterMovement()->BrakingDecelerationFlying = OwnerPlayer->GetStatComponent()->Speed.BrakingDeceleration;
+		OwnerPlayer->GetCharacterMovement()->RotationRate = OwnerPlayer->GetStatComponent()->Speed.RotationRate;
 	}
 }
 
 void UCFlightComponent::StartFlight()
 {
 	bFlying = true;
-	OwnerPlayer->StatComponent->SetStatusType(EStatusType::Flight);
+	OwnerPlayer->GetStatComponent()->SetStatusType(EStatusType::Flight);
 
 	SetFlying(bFlying);
 	SetFlightMovementParam(bFlying);
@@ -137,7 +137,7 @@ void UCFlightComponent::EndFlight()
 {
 	bFlying = false;
 	OwnerPlayer->OffSprint();
-	OwnerPlayer->StatComponent->SetStatusType(EStatusType::Unarmed);
+	OwnerPlayer->GetStatComponent()->SetStatusType(EStatusType::Unarmed);
 
 	SetFlying(bFlying);
 	SetFlightMovementParam(bFlying);
@@ -171,10 +171,10 @@ void UCFlightComponent::SetSprint(bool input)
 	}
 	else
 	{
-		OwnerPlayer->GetCharacterMovement()->MaxWalkSpeed = OwnerPlayer->StatComponent->Speed.FlyWarkSpeed;
-		OwnerPlayer->GetCharacterMovement()->MaxFlySpeed = OwnerPlayer->StatComponent->Speed.FlyWarkSpeed;
-		OwnerPlayer->GetCharacterMovement()->MaxAcceleration = OwnerPlayer->StatComponent->Speed.MaxAcceleration;
-		OwnerPlayer->GetCharacterMovement()->RotationRate = OwnerPlayer->StatComponent->Speed.RotationRate;
+		OwnerPlayer->GetCharacterMovement()->MaxWalkSpeed = OwnerPlayer->GetStatComponent()->Speed.FlyWarkSpeed;
+		OwnerPlayer->GetCharacterMovement()->MaxFlySpeed = OwnerPlayer->GetStatComponent()->Speed.FlyWarkSpeed;
+		OwnerPlayer->GetCharacterMovement()->MaxAcceleration = OwnerPlayer->GetStatComponent()->Speed.MaxAcceleration;
+		OwnerPlayer->GetCharacterMovement()->RotationRate = OwnerPlayer->GetStatComponent()->Speed.RotationRate;
 
 		SetActiveComponent(Flight_Wave_Ref, input, input);
 

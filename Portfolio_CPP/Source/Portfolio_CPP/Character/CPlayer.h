@@ -22,6 +22,9 @@ public:
 
 
 public:
+	FORCEINLINE class UCFlightComponent* GetFlightComponent() const { return FlightComponent; }
+
+public:
 	virtual void OnMoveForward(float InAxis) override;
 	void OnMoveForward_Flight(float InAxis);
 
@@ -39,9 +42,9 @@ public:
 	void OffSprint();
 
 
-public:
+private:
 	//Actor Component
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	UPROPERTY(Category = Component, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		class UCFlightComponent* FlightComponent;
 
 

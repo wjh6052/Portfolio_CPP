@@ -22,7 +22,7 @@ void ACWings::BeginPlay()
 
 	OwnerPlayer = Cast<ACPlayer>(GetOwner());
 	CheckNull(OwnerPlayer);
-	OwnerPlayer->FlightComponent;
+	OwnerPlayer->GetFlightComponent();
 	
 	if(Wings_Trail != nullptr)
 		Wings_TrailComp = UNiagaraFunctionLibrary::SpawnSystemAttached
@@ -40,6 +40,7 @@ void ACWings::BeginPlay()
 			false
 		);
 
+	CheckNull(SkeletalMesh);
 	UMaterialInstanceDynamic::Create(WingsDynamicMaterial, SkeletalMesh->GetMaterial(0));
 
 	if(Dissolve_Inst != nullptr)

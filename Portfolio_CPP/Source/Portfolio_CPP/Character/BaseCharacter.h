@@ -34,9 +34,9 @@ public:
 
 
 public:	
-	FORCEINLINE FSpeed GetSpeed() { return BaseSpeed; }
-	FORCEINLINE FStat GetStat() { return BaseStat; }
-	FORCEINLINE UCStatComponent* GetStatComponent() { return StatComponent; }
+	FORCEINLINE FSpeed GetSpeed() const { return BaseSpeed; }
+	FORCEINLINE FStat GetStat() const { return BaseStat; }
+	FORCEINLINE class UCStatComponent* GetStatComponent() const { return StatComponent; }
 
 
 protected:
@@ -66,9 +66,9 @@ public:
 		class UCameraComponent* Camera;
 
 
-public:
+private:
 	//Actor Component
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	UPROPERTY(Category = Component, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		UCStatComponent* StatComponent;
 
 

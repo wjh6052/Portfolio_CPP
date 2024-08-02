@@ -32,4 +32,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		EStatusType StatusType;
 
+	class ABaseCharacter* OwnerCharacter;
+
 };
