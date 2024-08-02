@@ -7,6 +7,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
+
 #define INPUT
 
 ABaseCharacter::ABaseCharacter()
@@ -16,7 +17,7 @@ ABaseCharacter::ABaseCharacter()
 	//Ä«¸Þ¶ó
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
-	SpringArm->TargetArmLength = 200.0f; 
+	SpringArm->TargetArmLength = 300.0f; 
 	SpringArm->bUsePawnControlRotation = true;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
@@ -24,8 +25,8 @@ ABaseCharacter::ABaseCharacter()
 	Camera->bUsePawnControlRotation = false;
 
 
-	//Component
-	StatComponent = this->CreateDefaultSubobject<UCStatComponent>(TEXT("StatComponent"));
+	//Actor Component
+	StatComponent = CreateDefaultSubobject<UCStatComponent>(TEXT("StatComponent"));
 
 
 	bUseControllerRotationPitch = false;
@@ -36,12 +37,15 @@ ABaseCharacter::ABaseCharacter()
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0, 720, 0);
+
+
 }
 
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	//CLog::Print(StatComponent->GetOwner()->GetName());
 }
 
 void ABaseCharacter::Tick(float DeltaTime)
@@ -63,7 +67,7 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 
 	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ABaseCharacter::OnJump);
-	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ABaseCharacter::OffJump);
+	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Released, this, &ABaseCharacter::OffJump);
 }
 
 
@@ -111,6 +115,7 @@ void ABaseCharacter::OnCameraZoom(float InAxis)
 
 void ABaseCharacter::OnJump()
 {
+	
 	ACharacter::Jump();
 }
 

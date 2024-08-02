@@ -31,6 +31,26 @@ public:
 	virtual void OnJump() override;
 	virtual void OffJump() override;
 
+	void OnWalk();
+	void OnRun();
+	void OffRun();
+	void RunDelay();
+	void OnSprint();
+	void OffSprint();
 
 
+public:
+	//Actor Component
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+		class UCFlightComponent* FlightComponent;
+
+
+private:
+	int Run = 0;
+	FTimerHandle RunTimer;
+
+	bool Sprint = false;
+
+	UPROPERTY(EditAnywhere, Category = "ActionDataAsset")
+		class UCActionDataAsset* ActionDataAsset;
 };

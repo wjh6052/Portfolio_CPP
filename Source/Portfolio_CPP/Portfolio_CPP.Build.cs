@@ -13,7 +13,8 @@ public class Portfolio_CPP : ModuleRules
 			"CoreUObject",
 			"Engine",
 			"InputCore",
-        });
+			"Niagara"
+		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

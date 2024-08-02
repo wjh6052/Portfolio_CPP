@@ -36,6 +36,7 @@ public:
 public:	
 	FORCEINLINE FSpeed GetSpeed() { return BaseSpeed; }
 	FORCEINLINE FStat GetStat() { return BaseStat; }
+	FORCEINLINE UCStatComponent* GetStatComponent() { return StatComponent; }
 
 
 protected:
@@ -67,8 +68,8 @@ public:
 
 public:
 	//Actor Component
-	UPROPERTY(VisibleDefaultsOnly)
-		class UCStatComponent* StatComponent;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+		UCStatComponent* StatComponent;
 
 
 protected:
