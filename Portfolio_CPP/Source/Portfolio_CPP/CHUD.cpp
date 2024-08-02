@@ -23,6 +23,7 @@ void ACHUD::DrawHUD()
 {
 	Super::DrawHUD();
 
+	CheckNull(BaseCharacter);
 	CheckNull(BaseCharacter->GetStatComponent());
 	
 	FString typeStr = StaticEnum<ESpeedType>()->GetDisplayNameTextByValue(static_cast<int64>(BaseCharacter->GetStatComponent()->GetSpeedType())).ToString();

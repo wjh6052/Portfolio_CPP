@@ -25,9 +25,8 @@ ABaseCharacter::ABaseCharacter()
 	Camera->bUsePawnControlRotation = false;
 
 
-	//Actor Component
-	StatComponent = CreateDefaultSubobject<UCStatComponent>(TEXT("StatComponent"));
-
+	//Create Actor Component
+	StatComp = CreateDefaultSubobject<UCStatComponent>(L"StatComponent");
 
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;

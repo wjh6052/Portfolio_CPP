@@ -30,9 +30,9 @@ void UCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	bFalling = OwnerCharacter->GetCharacterMovement()->IsFalling();
 
 
-	StateType = OwnerCharacter->GetStatComponent()->GetState();
+	StateType = OwnerCharacter->GetStatComponent()->GetStateType();
 
-	StatusType = OwnerCharacter->GetStatComponent()->GetStatus();
+	StatusType = OwnerCharacter->GetStatComponent()->GetStatusType();
 
 	
 	PawnOwnerIsValid();

@@ -1,14 +1,16 @@
 #include "CPlayer.h"
 #include "../Global.h"
+
 #include "../Datas/DataAsset/CActionDataAsset.h"
-#include "../Components/CharacterComp/Player/CFlightComponent.h"
+
 
 
 ACPlayer::ACPlayer()
 {
 	
-	//Actor Component
-	FlightComponent = CreateDefaultSubobject<UCFlightComponent>(TEXT("FlightComponent"));
+	//Create Actor Component
+	FlightComponent = CreateDefaultSubobject<UCFlightComponent>(L"FlightComponent");
+
 }
 
 void ACPlayer::BeginPlay()
@@ -41,13 +43,14 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ACPlayer::OnMoveForward(float InAxis)
 {	
-	if(InAxis == 0)
-		if(GetStatComponent()->IsSpeedType(ESpeedType::Walk))
-			GetStatComponent()->SetSpeed(ESpeedType::Joging);
+	Super::OnMoveRight(InAxis);
 
-	CheckFalse(GetStatComponent()->IsCanMove());
+	if(GetStatComponent()->IsSpeedType(ESpeedType::Walk))
+		GetStatComponent()->SetSpeed(ESpeedType::Joging);
+		
 
-	switch (GetStatComponent()->GetStatus())
+
+	switch (GetStatComponent()->GetStatusType())
 	{
 
 	case EStatusType::Flight:
@@ -78,7 +81,8 @@ void ACPlayer::OnMoveRight(float InAxis)
 {
 	Super::OnMoveRight(InAxis);
 
-	switch (GetStatComponent()->GetStatus())
+
+	switch (GetStatComponent()->GetStatusType())
 	{
 
 	case EStatusType::Flight:
@@ -107,7 +111,7 @@ void ACPlayer::OnMoveRight_Flight(float InAxis)
 
 void ACPlayer::OnJump()
 {
-	switch (GetStatComponent()->GetState())
+	switch (GetStatComponent()->GetStateType())
 	{
 
 	case EStateType::Idling:
@@ -118,7 +122,7 @@ void ACPlayer::OnJump()
 		break;
 	}
 
-	switch (GetStatComponent()->GetStatus())
+	switch (GetStatComponent()->GetStatusType())
 	{
 
 	case EStatusType::Unarmed:

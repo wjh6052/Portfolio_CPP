@@ -118,8 +118,8 @@ public:
 	FORCEINLINE float GetCritical_Chance() const { return Stat.Critical_Chance; }
 
 	
-	FORCEINLINE EStateType GetState() const { return StateType; }
-	FORCEINLINE EStatusType GetStatus() const { return StatusType; }
+	FORCEINLINE EStateType GetStateType() const { return StateType; }
+	FORCEINLINE EStatusType GetStatusType() const { return StatusType; }
 	FORCEINLINE ESpeedType GetSpeedType() const { return SpeedType; }
 
 
@@ -147,10 +147,10 @@ public:
 	FORCEINLINE bool IsCanMove() { return bCanMove; }
 	FORCEINLINE bool IsCameraCanMove() { return bCameraCanMove; }
 
-	FORCEINLINE bool IsSpeedType(ESpeedType input) { if (SpeedType == input) return true; return false; }
+	FORCEINLINE bool IsSpeedType(ESpeedType input) { return SpeedType == input; }
 
-	FORCEINLINE bool IsState(EStateType input) { if (StateType == input) return true; return false; }
-	FORCEINLINE bool IsStatus(EStatusType input) { if (StatusType == input) return true; return false; }
+	FORCEINLINE bool IsState(EStateType input) { return StateType == input; }
+	FORCEINLINE bool IsStatus(EStatusType input) { return StatusType == input; }
 
 	
 
@@ -173,7 +173,6 @@ public:
 	ESpeedType SpeedType;
 
 	FStat Stat;
-	UPROPERTY(EditAnywhere, Category = "SpeedData")
 	FSpeed Speed;
 
 	bool bCanMove = true;

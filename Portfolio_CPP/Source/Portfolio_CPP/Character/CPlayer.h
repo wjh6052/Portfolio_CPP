@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "BaseCharacter.h"
+#include "../Components/CharacterComp/Player/CFlightComponent.h"
 #include "CPlayer.generated.h"
 
 UCLASS()
@@ -42,10 +43,10 @@ public:
 	void OffSprint();
 
 
-private:
+protected:
 	//Actor Component
-	UPROPERTY(Category = Component, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		class UCFlightComponent* FlightComponent;
+	UPROPERTY(Category = Component, VisibleAnywhere, BlueprintReadOnly)
+		TObjectPtr<UCFlightComponent> FlightComponent;
 
 
 private:
