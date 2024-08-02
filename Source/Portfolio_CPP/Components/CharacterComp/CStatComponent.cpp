@@ -1,57 +1,48 @@
 #include "CStatComponent.h"
 #include "../../Character/BaseCharacter.h"
-#include "../../Global.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 
 
 UCStatComponent::UCStatComponent()
 {
-	OwnerCharacter = Cast<ABaseCharacter>(GetOwner());
-	CheckNull(OwnerCharacter);
+
 }
 
 
 void UCStatComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	OwnerCharacter = Cast<ABaseCharacter>(this->GetOwner());
 	
-	
+	if (OwnerCharacter == nullptr) return;
 
 	OwnerCharacter->GetStat() = Stat;
 	OwnerCharacter->GetSpeed() = Speed;
-
-	SetSpeed(ESpeedType::Joging);
-	
 }
 
 
 void UCStatComponent::SetSpeed(ESpeedType input)
-{	
+{
+	if (OwnerCharacter == nullptr) return;
+
 	switch (input)
 	{
 	case ESpeedType::Stop:
-		SetSpeedType(ESpeedType::Stop);
 		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = Speed.Stop;
 		break;
 
 	case ESpeedType::Walk:
-		SetSpeedType(ESpeedType::Walk);
 		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = Speed.Walk;
 		break;
 
 	case ESpeedType::Joging:
-		SetSpeedType(ESpeedType::Joging);
 		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = Speed.Joging;
 		break;
 
-	case ESpeedType::Run:
-		SetSpeedType(ESpeedType::Run);
-		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = Speed.Run;
-		break;
-
 	case ESpeedType::Sprint:
-		SetSpeedType(ESpeedType::Sprint);
+		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = Speed.Sprint;
 		break;
 
 	default:

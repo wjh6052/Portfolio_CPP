@@ -1,2 +1,0 @@
-#include "CFlightDataAsset.h"
-

@@ -14,21 +14,21 @@ struct FStat
 
 public:
 	UPROPERTY(EditAnywhere)
-		float HP = 100;
+	float HP = 100;
 	UPROPERTY(EditAnywhere)
-		float HP_Max = 100;
+	float HP_Max = 100;
 	UPROPERTY(EditAnywhere)
-		float Damage = 10;
+	float Damage = 10;
 	UPROPERTY(EditAnywhere)
-		float Defense = 5;
+	float Defense = 5;
 	UPROPERTY(EditAnywhere)
-		float Critical_Damage = 1.5;
+	float Critical_Damage = 1.5;
 	UPROPERTY(EditAnywhere)
-		float Critical_Chance = 20;
+	float Critical_Chance = 20;
 
 	//무적모드
 	UPROPERTY(EditAnywhere)
-		bool God_Mode = false;
+	bool God_Mode = false;
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -38,23 +38,13 @@ struct FSpeed
 
 public:
 	UPROPERTY(EditAnywhere)
-		float Stop = 0;
+	float Stop = 0;
 	UPROPERTY(EditAnywhere)
-		float Walk = 200;
+	float Walk = 200;
 	UPROPERTY(EditAnywhere)
-		float Joging = 400;
+	float Joging = 400;
 	UPROPERTY(EditAnywhere)
-		float Run = 600;
-
-	UPROPERTY(EditAnywhere)
-		float FlyWarkSpeed = 600.f;
-	UPROPERTY(EditAnywhere)
-		float MaxAcceleration = 2048.f;
-	UPROPERTY(EditAnywhere)
-		float BrakingDeceleration = 0;
-	UPROPERTY(EditAnywhere)
-		FRotator RotationRate = FRotator(0.f, 720.f, 0.f);
-
+	float Sprint = 600;
 };
 
 
@@ -87,7 +77,6 @@ enum class ESpeedType : uint8
 	Stop,
 	Walk,
 	Joging,
-	Run,
 	Sprint
 };
 
@@ -117,10 +106,8 @@ public:
 	FORCEINLINE float GetCritical_Damage() { return Stat.Critical_Damage; }
 	FORCEINLINE float GetCritical_Chance() { return Stat.Critical_Chance; }
 
-	
 	FORCEINLINE EStateType GetState() { return StateType; }
 	FORCEINLINE EStatusType GetStatus() { return StatusType; }
-	FORCEINLINE ESpeedType GetSpeedType() { return SpeedType; }
 
 
 	//set
@@ -133,11 +120,10 @@ public:
 
 	FORCEINLINE void SetWalkSpeed(float input) { Speed.Walk = input; }
 	FORCEINLINE void SetJogingSpeed(float input) { Speed.Joging = input; }
-	FORCEINLINE void SetSprintSpeed(float input) { Speed.Run = input; }
+	FORCEINLINE void SetSprintSpeed(float input) { Speed.Sprint = input; }
 
-	FORCEINLINE void SetStateType(EStateType input) { StateType = input; }
-	FORCEINLINE void SetStatusType(EStatusType input) { StatusType = input; }
-	FORCEINLINE void SetSpeedType(ESpeedType input) { SpeedType = input; }
+	FORCEINLINE void SetState(EStateType input) { StateType = input; }
+	FORCEINLINE void SetStatus(EStatusType input) { StatusType = input; }
 
 	FORCEINLINE void SetCanMove(bool input) { bCanMove = input; }
 	FORCEINLINE void SetCameraCanMove(bool input) { bCameraCanMove = input; }
@@ -160,18 +146,14 @@ public:
 
 
 
-
-public:
+private:
 	class ABaseCharacter* OwnerCharacter;
-	 
+
 	//현재의 상태를 조절하는 열거형
-	EStateType StateType;
-	EStatusType StatusType;
-	UPROPERTY(BlueprintReadOnly)
-	ESpeedType SpeedType;
+	EStateType StateType = EStateType::Idling;
+	EStatusType StatusType = EStatusType::Unarmed;
 
 	FStat Stat;
-	UPROPERTY(EditAnywhere, Category = "SpeedData")
 	FSpeed Speed;
 
 	bool bCanMove = true;
