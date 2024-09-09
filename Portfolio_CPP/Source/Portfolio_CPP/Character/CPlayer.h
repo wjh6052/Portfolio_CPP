@@ -27,10 +27,8 @@ public:
 
 public:
 	virtual void OnMoveForward(float InAxis) override;
-	void OnMoveForward_Flight(float InAxis);
-
 	virtual void OnMoveRight(float InAxis) override;
-	void OnMoveRight_Flight(float InAxis);
+	
 
 	virtual void OnJump() override;
 	virtual void OffJump() override;
@@ -43,6 +41,7 @@ public:
 	void OffSprint();
 
 
+
 protected:
 	//Actor Component
 	UPROPERTY(Category = Component, VisibleAnywhere, BlueprintReadOnly)
@@ -53,7 +52,6 @@ private:
 	int Run = 0;
 	FTimerHandle RunTimer;
 
-	bool Sprint = false;
 
 	UPROPERTY(EditAnywhere, Category = "ActionDataAsset")
 		class UCActionDataAsset* ActionDataAsset;

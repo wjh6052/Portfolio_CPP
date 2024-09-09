@@ -26,9 +26,11 @@ void ACHUD::DrawHUD()
 	CheckNull(BaseCharacter);
 	CheckNull(BaseCharacter->GetStatComponent());
 	
-	FString typeStr = StaticEnum<ESpeedType>()->GetDisplayNameTextByValue(static_cast<int64>(BaseCharacter->GetStatComponent()->GetSpeedType())).ToString();
-	DrawText("SpeedType : " + typeStr, FLinearColor::Red, 10, Canvas->ClipY - 50, nullptr, 2.f);
+	FString speedType = StaticEnum<ESpeedType>()->GetDisplayNameTextByValue(static_cast<int64>(BaseCharacter->GetStatComponent()->GetSpeedType())).ToString();
+	DrawText("Speed Type : " + speedType, FLinearColor::Red, 10, Canvas->ClipY - 50, nullptr, 2.f);
 
+	FString statusType = StaticEnum<EStatusType>()->GetDisplayNameTextByValue(static_cast<int64>(BaseCharacter->GetStatComponent()->GetStatusType())).ToString();
+	DrawText("Status Type : " + statusType, FLinearColor::Red, 10, Canvas->ClipY - 75, nullptr, 2.f);
 }
 
 

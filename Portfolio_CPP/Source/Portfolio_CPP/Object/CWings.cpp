@@ -74,7 +74,7 @@ void ACWings::SetSprint(bool input)
 {
 	bSprint = input;
 
-	Wings_TrailComp->SetActive(bSprint, bSprint);
+	//Wings_TrailComp->SetActive(bSprint, bSprint);
 
 	if (input)
 	{
@@ -89,6 +89,8 @@ void ACWings::SetSprint(bool input)
 void ACWings::SpawnWings(bool input)
 {
 	bSpawnWings = input;
+
+	SetActorHiddenInGame(!bSpawnWings);
 
 	SpawnWingsImpact(bSpawnWings);
 }

@@ -28,9 +28,6 @@ public:
 		void SpawnWingsImpact(bool input);
 
 	UFUNCTION(BlueprintImplementableEvent)
-		void HitReset();
-
-	UFUNCTION(BlueprintImplementableEvent)
 		void WingsMove();
 
 	UFUNCTION(BlueprintImplementableEvent)

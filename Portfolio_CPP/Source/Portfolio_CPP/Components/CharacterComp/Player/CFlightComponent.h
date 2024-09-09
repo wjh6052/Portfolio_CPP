@@ -30,6 +30,8 @@ public:
 	UPROPERTY(EditAnywhere)
 		float FlyWarkSpeed = 1000.f;
 	UPROPERTY(EditAnywhere)
+		float FlySpeed = 4096.f;
+	UPROPERTY(EditAnywhere)
 		float MaxAcceleration = 20480.f;
 	UPROPERTY(EditAnywhere)
 		float BrakingDeceleration = 4096.0;
@@ -38,7 +40,8 @@ public:
 };
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+
+UCLASS(BlueprintType, ClassGroup = "Custom", meta = (BlueprintSpawnableComponent))
 class PORTFOLIO_CPP_API UCFlightComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -49,10 +52,18 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+
 public:
+	FORCEINLINE bool GetSprint() const { return Flight_bSprint; }
+
+public:
+	void OnMoveForward_Flight(float InAxis);
+	void OnMoveRight_Flight(float InAxis);
+
 	void SetFlying(bool input);
 	void SetFlightMovementParam(bool input);
 
@@ -66,6 +77,13 @@ public:
 	void SetActiveComponent(class UActorComponent* Component, bool bNewActive, bool bReset);
 	
 
+public:
+	FORCEINLINE void HitReset() { HitReset_True = false; HitReset_False = false; };
+
+	UFUNCTION()
+		void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	void HitEvent(bool input);
 
 private:
 	UPROPERTY(EditAnywhere, Category = "FlightData")
@@ -80,15 +98,29 @@ private:
 		FFlightSetting FlightSetting;
 	UPROPERTY(EditAnywhere, Category = "FlightData")
 		FFlightSetting_Sprint FlightSetting_Sprint;
+	
+public:
+	UPROPERTY(EditAnywhere, Category = "Flight_Variable")
+		float Lean_X;
+	UPROPERTY(EditAnywhere, Category = "Flight_Variable")
+		float Lean_Y;
 
+	UPROPERTY(EditAnywhere, Category = "Flight_Variable")
+		FVector LookAtLocation;
+
+
+private:
 	class ACWings* Wings;
 
 	class ACPlayer* OwnerPlayer;
 
-	bool bFlying = false;
-	bool bSprint = false;
-	bool bLanding = false;
+	bool Flight_bFlying = false;
+	bool Flight_bSprint = false;
+	bool Flight_bLanding = false;
 
+
+	bool HitReset_True = true;
+	bool HitReset_False = true;
 
 
 	class UNiagaraComponent* Flight_Trail_Ref;

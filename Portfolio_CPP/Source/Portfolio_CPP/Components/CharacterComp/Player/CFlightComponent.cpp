@@ -7,6 +7,7 @@
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/CapsuleComponent.h"
 
 
 
@@ -23,6 +24,7 @@ void UCFlightComponent::BeginPlay()
 
 	OwnerPlayer = Cast<ACPlayer>(GetOwner());
 	CheckNull(OwnerPlayer);
+
 
 	if (FlightDataAsset != nullptr)
 	{
@@ -74,14 +76,18 @@ void UCFlightComponent::BeginPlay()
 		}
 	}
 	
-	if (WingsClass != nullptr)
-	{
-		FActorSpawnParameters wingsOwner; 
-		wingsOwner.Owner = Cast<AActor>(OwnerPlayer);
-		Wings = GetWorld()->SpawnActor<ACWings>(WingsClass, FVector::ZeroVector, FRotator::ZeroRotator, wingsOwner);
-		Wings->SetActorHiddenInGame(true);
-		Wings->AttachTo(L"Wings");
-	}
+
+	
+	OwnerPlayer->GetCapsuleComponent()->OnComponentHit.AddDynamic(this, &UCFlightComponent::OnHit);
+
+
+	CheckNull(WingsClass);	
+	FActorSpawnParameters wingsOwner;
+	wingsOwner.Owner = Cast<AActor>(OwnerPlayer);
+	Wings = GetWorld()->SpawnActor<ACWings>(WingsClass, FVector::ZeroVector, FRotator::ZeroRotator, wingsOwner);
+	Wings->SetActorHiddenInGame(true);
+	Wings->AttachTo(L"Wings");
+		
 
 }
 
@@ -90,6 +96,38 @@ void UCFlightComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	
+	LookAtLocation = UKismetMathLibrary::VInterpTo(
+		LookAtLocation,
+		OwnerPlayer->GetActorLocation() + (OwnerPlayer->GetActorForwardVector() * 5000.f) + FVector(0.f, 0.f, -2000.f),
+		UGameplayStatics::GetWorldDeltaSeconds(GetWorld()),
+		10.f
+		);
+
+}
+
+void UCFlightComponent::OnMoveForward_Flight(float InAxis)
+{
+	FVector controlRotation = OwnerPlayer->GetControlRotation().Vector();
+
+
+	float direction_z = 0.f;
+	direction_z += (-0.1f > controlRotation.Z && controlRotation.Z > -1.0) ? controlRotation.Z : 0;
+	direction_z += (1.0f > controlRotation.Z && controlRotation.Z > 0.1f) ? controlRotation.Z : 0;
+
+	FVector direction = FVector(controlRotation.X, controlRotation.Y, direction_z);
+
+	OwnerPlayer->AddMovementInput(direction, InAxis);
+}
+
+void UCFlightComponent::OnMoveRight_Flight(float InAxis)
+{
+	CheckTrue(OwnerPlayer->GetSprint());
+
+
+	FVector direction = UKismetMathLibrary::GetRightVector(FRotator(0, OwnerPlayer->GetControlRotation().Yaw, 0));
+	CheckTrue(OwnerPlayer->IsMovementMode(EMovementMode::MOVE_Falling));
+	OwnerPlayer->AddMovementInput(direction, InAxis);
 }
 
 void UCFlightComponent::SetFlying(bool input)
@@ -99,7 +137,7 @@ void UCFlightComponent::SetFlying(bool input)
 		OwnerPlayer->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
 	}
 	else
-	{
+	{	
 		OwnerPlayer->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Falling);
 	}
 }
@@ -120,52 +158,74 @@ void UCFlightComponent::SetFlightMovementParam(bool input)
 
 void UCFlightComponent::StartFlight()
 {
-	bFlying = true;
+	Flight_bFlying = true;
 	OwnerPlayer->GetStatComponent()->SetStatusType(EStatusType::Flight);
 
-	SetFlying(bFlying);
-	SetFlightMovementParam(bFlying);
-	Wings->SpawnWings(bFlying);
+	SetFlying(Flight_bFlying);
+	SetFlightMovementParam(Flight_bFlying);
+
+	if (Wings != nullptr)
+	{
+		Wings->SpawnWings(Flight_bFlying);
+		
+	}
 
 
+	OwnerPlayer->GetCharacterMovement()->bOrientRotationToMovement = true;
 	StopToPlayAnim(&FlightDataAsset->Hover_Start);
-	OwnerPlayer->GetCharacterMovement()->bOrientRotationToMovement = bFlying;
-	Wings->HitReset();
+	
+	
+	HitReset();
+
 }
 
 void UCFlightComponent::EndFlight()
 {
-	bFlying = false;
+	CheckTrue(Flight_bSprint); // Spawn중 날라감 방지
+
+	Flight_bFlying = false;
 	OwnerPlayer->OffSprint();
 	OwnerPlayer->GetStatComponent()->SetStatusType(EStatusType::Unarmed);
 
-	SetFlying(bFlying);
-	SetFlightMovementParam(bFlying);
-	Wings->HitReset();
-	Wings->SpawnWings(bFlying);
+	SetFlying(Flight_bFlying);
+	SetFlightMovementParam(Flight_bFlying);
 
-	SetSprint(bFlying);
+	HitReset();
+
+
+	if (Wings != nullptr)
+	{
+		Wings->SpawnWings(Flight_bFlying);
+		
+	}
+		
+
+	
+
+	SetSprint(Flight_bFlying);
 }
 
 void UCFlightComponent::SetSprint(bool input)
 {
-	bool bMainSprint = input;
 
 	CheckFalse(CheckMovementMode(EMovementMode::MOVE_Falling) || CheckMovementMode(EMovementMode::MOVE_Flying));
+	
+	Flight_bSprint = input;
+
+
 	OwnerPlayer->GetCharacterMovement()->bUseControllerDesiredRotation = input;
 	OwnerPlayer->GetCharacterMovement()->bOrientRotationToMovement = !input;
 
-	bSprint = input;
+	
 
 	if (input)
 	{
 		OwnerPlayer->GetCharacterMovement()->MaxWalkSpeed = FlightSetting_Sprint.FlyWarkSpeed;
-		OwnerPlayer->GetCharacterMovement()->MaxFlySpeed = FlightSetting_Sprint.FlyWarkSpeed;
+		OwnerPlayer->GetCharacterMovement()->MaxFlySpeed = FlightSetting_Sprint.FlySpeed;
 		OwnerPlayer->GetCharacterMovement()->MaxAcceleration = FlightSetting_Sprint.MaxAcceleration;
 		OwnerPlayer->GetCharacterMovement()->RotationRate = FlightSetting_Sprint.RotationRate;
 		
-		SetActiveComponent(Flight_Wave_Ref, input, input);
-		Wings->SetSprint(input);
+		SetActiveComponent(Flight_Wave_Ref, input, input);	
 
 		StopToPlayAnim(&FlightDataAsset->FastMove_Start);
 	}
@@ -178,19 +238,24 @@ void UCFlightComponent::SetSprint(bool input)
 
 		SetActiveComponent(Flight_Wave_Ref, input, input);
 
-		Wings->SetSprint(input);
 
-		CheckFalse(bMainSprint);
-		if (bLanding)
+		if (Flight_bLanding)
 		{
 			StopToPlayAnim(&FlightDataAsset->Landing);
-			bLanding = true;
+			Flight_bLanding = false;
+			return;
 		}
-		else
+		else if(Flight_bFlying)
 		{
 			StopToPlayAnim(&FlightDataAsset->Hover_Start);
 		}
+
 	}
+
+	if (Wings != nullptr)
+		Wings->SetSprint(input);
+
+	
 }
 
 bool UCFlightComponent::CheckMovementMode(EMovementMode input)
@@ -215,6 +280,87 @@ void UCFlightComponent::SetActiveComponent(UActorComponent* Component, bool bNew
 }
 
 
+
+void UCFlightComponent::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	
+	CheckFalse(Flight_bFlying);
+	
+	
+
+	if (UKismetMathLibrary::InRange_FloatFloat(UKismetMathLibrary::NormalizeToRange(OwnerPlayer->GetControlRotation().Pitch, 270.f, 360.f), 0.f, 0.7f))
+	{
+		if (Hit.ImpactNormal.Z > 0.7f)
+		{
+			if (Flight_bSprint)
+			{
+				if (UKismetMathLibrary::NormalizeToRange(OwnerPlayer->GetControlRotation().Pitch, 270.f, 360.f) < 0.65f)
+				{
+					HitEvent(true);
+				}
+				else
+				{
+					HitEvent(false);
+				}
+			}
+			else
+			{
+				HitEvent(false);
+			}
+		}
+		else
+		{
+			SetSprint(false);
+		}
+	}
+	else
+	{
+		CheckFalse(Flight_bSprint);
+
+		CheckTrue(Hit.ImpactNormal.Z > 0.7f);
+
+		SetSprint(false);
+		
+	}
+	
+
+
+
+}
+
+void UCFlightComponent::HitEvent(bool input)
+{
+	if (input)
+	{
+		CheckTrue(HitReset_True);
+		HitReset_True = true;
+
+		CLog::Print("1");
+
+		Flight_bLanding = true;
+		SetSprint(false);
+		EndFlight();
+
+		//StopToPlayAnim(&FlightDataAsset->Landing);
+
+		
+		OwnerPlayer->GetController()->SetControlRotation(FRotator(0.f, OwnerPlayer->GetControlRotation().Yaw, OwnerPlayer->GetControlRotation().Roll));
+	}
+	else
+	{
+		CheckTrue(HitReset_False);
+		HitReset_False = true;
+
+		CLog::Print("2");
+
+
+		Flight_bLanding = true;
+		SetSprint(false);
+		EndFlight();
+
+		OwnerPlayer->GetController()->SetControlRotation(FRotator(0.f, OwnerPlayer->GetControlRotation().Yaw, OwnerPlayer->GetControlRotation().Roll));
+	}
+}
 
 
 

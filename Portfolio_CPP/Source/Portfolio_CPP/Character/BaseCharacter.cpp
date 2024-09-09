@@ -4,8 +4,9 @@
 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Controller.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Engine/Classes/Components/SphereComponent.h"
+
 
 
 #define INPUT
@@ -28,14 +29,15 @@ ABaseCharacter::ABaseCharacter()
 	//Create Actor Component
 	StatComp = CreateDefaultSubobject<UCStatComponent>(L"StatComponent");
 
+	
+
+	// -> MovementComp
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
-
-	// -> MovementComp
-	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0, 720, 0);
+
 
 
 }
@@ -49,6 +51,7 @@ void ABaseCharacter::BeginPlay()
 void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 
 }
 

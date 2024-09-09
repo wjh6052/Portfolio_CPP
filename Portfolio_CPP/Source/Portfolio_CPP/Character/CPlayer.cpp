@@ -2,7 +2,7 @@
 #include "../Global.h"
 
 #include "../Datas/DataAsset/CActionDataAsset.h"
-
+#include "Components/SkeletalMeshComponent.h"
 
 
 ACPlayer::ACPlayer()
@@ -17,14 +17,14 @@ void ACPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	CharacterType = ECharacterType::Player;
-
+	GetStatComponent()->SetSpeed(ESpeedType::Joging);
+	
 	
 }
 
 void ACPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
 
 }
 
@@ -45,8 +45,14 @@ void ACPlayer::OnMoveForward(float InAxis)
 {	
 	Super::OnMoveRight(InAxis);
 
-	if(GetStatComponent()->IsSpeedType(ESpeedType::Walk))
-		GetStatComponent()->SetSpeed(ESpeedType::Joging);
+	if (InAxis == 0.f)
+	{
+		if(GetStatComponent()->IsSpeedType(ESpeedType::Run))
+		{
+			GetStatComponent()->SetSpeed(ESpeedType::Joging);
+		}
+	}
+	
 		
 
 
@@ -54,7 +60,7 @@ void ACPlayer::OnMoveForward(float InAxis)
 	{
 
 	case EStatusType::Flight:
-		OnMoveForward_Flight(InAxis);
+		GetFlightComponent()->OnMoveForward_Flight(InAxis);
 		break;
 
 	case EStatusType::Climbing:
@@ -73,10 +79,6 @@ void ACPlayer::OnMoveForward(float InAxis)
 	}
 }
 
-void ACPlayer::OnMoveForward_Flight(float InAxis)
-{
-}
-
 void ACPlayer::OnMoveRight(float InAxis)
 {
 	Super::OnMoveRight(InAxis);
@@ -85,8 +87,8 @@ void ACPlayer::OnMoveRight(float InAxis)
 	switch (GetStatComponent()->GetStatusType())
 	{
 
-	case EStatusType::Flight:
-		OnMoveRight_Flight(InAxis);
+	case EStatusType::Flight: 
+		GetFlightComponent()->OnMoveRight_Flight(InAxis);
 		break;
 
 	case EStatusType::Climbing:
@@ -105,9 +107,6 @@ void ACPlayer::OnMoveRight(float InAxis)
 	}
 }
 
-void ACPlayer::OnMoveRight_Flight(float InAxis)
-{
-}
 
 void ACPlayer::OnJump()
 {
@@ -126,10 +125,16 @@ void ACPlayer::OnJump()
 	{
 
 	case EStatusType::Unarmed:
+		if(IsMovementMode(EMovementMode::MOVE_Falling))
+		{
+			if (GetStatComponent()->IsStatus(EStatusType::Unarmed))
+				GetFlightComponent()->StartFlight();
+		}
 		Super::OnJump();
 		break;
 
 	case EStatusType::Flight:
+		GetFlightComponent()->EndFlight();
 		break;
 
 	case EStatusType::Climbing:
@@ -161,11 +166,10 @@ void ACPlayer::OnWalk()
 		GetStatComponent()->SetSpeed(ESpeedType::Joging);
 		break;
 
-	case ESpeedType::Joging:
-		GetStatComponent()->SetSpeed(ESpeedType::Walk);
-		break;
+
 
 	default:
+		GetStatComponent()->SetSpeed(ESpeedType::Walk);
 		break;
 	}
 
@@ -176,7 +180,10 @@ void ACPlayer::OnRun()
 	++Run;
 
 	if (Run >= 2)
+	{
 		GetStatComponent()->SetSpeed(ESpeedType::Run);
+		Run = 0;
+	}
 }
 
 void ACPlayer::OffRun()
@@ -191,13 +198,15 @@ void ACPlayer::RunDelay()
 
 void ACPlayer::OnSprint()
 {
-	Sprint = true;
+	SetSprint(true);
+
 	if (GetStatComponent()->IsStatus(EStatusType::Flight))
 	{
-
+		GetFlightComponent()->SetSprint(GetSprint());
 
 		return;
 	}
+
 	CheckFalse(GetStatComponent()->IsState(EStateType::Idling));
 
 
@@ -207,7 +216,14 @@ void ACPlayer::OnSprint()
 
 void ACPlayer::OffSprint()
 {
-	Sprint = false;
+	SetSprint(false);
+
+	if (GetStatComponent()->IsStatus(EStatusType::Flight) && GetFlightComponent()->GetSprint())
+	{
+		GetFlightComponent()->SetSprint(GetSprint());
+
+		return;
+	}
 	CheckFalse(GetStatComponent()->IsStatus(EStatusType::Flight));
 
 }

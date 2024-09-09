@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "../Components/CharacterComp/CStatComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "BaseCharacter.generated.h"
 
 
@@ -35,11 +36,17 @@ public:
 
 public:	
 	//Get
+	FORCEINLINE bool GetSprint() const { return bSprint; }
 	FORCEINLINE FSpeed GetBaseSpeed() const { return BaseSpeed; }
 	FORCEINLINE FStat GetBaseStat() const { return BaseStat; }
 	FORCEINLINE class UCStatComponent* GetStatComponent() const { return StatComp; }
 
+	//Set
+	FORCEINLINE void SetSprint(bool input) { bSprint = input; }
 
+	//IS
+	FORCEINLINE bool IsMovementMode(EMovementMode input) { return input == GetCharacterMovement()->MovementMode; }
+	
 protected:
 	virtual void OnMoveForward(float InAxis);
 	void OnMoveForward_Unarmed(float InAxis);
@@ -78,6 +85,8 @@ protected:
 	ECharacterType CharacterType;
 	
 private:
+
+	bool bSprint = false;
 
 	//Speed
 	UPROPERTY(EditAnywhere, Category = "Speed")
