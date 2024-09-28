@@ -146,8 +146,8 @@ void UCFlightComponent::SetFlightMovementParam(bool input)
 {
 	if (input)
 	{
-		OwnerPlayer->GetCharacterMovement()->BrakingDecelerationFlying = FlightSetting.BrakingDeceleration;
-		OwnerPlayer->GetCharacterMovement()->RotationRate = FlightSetting.RotationRate;
+		OwnerPlayer->GetCharacterMovement()->BrakingDecelerationFlying = FlightDataAsset->FlightSetting.BrakingDeceleration;
+		OwnerPlayer->GetCharacterMovement()->RotationRate = FlightDataAsset->FlightSetting.RotationRate;
 	}
 	else
 	{
@@ -231,10 +231,10 @@ void UCFlightComponent::SetSprint(bool input)
 
 	if (input)
 	{
-		OwnerPlayer->GetCharacterMovement()->MaxWalkSpeed = FlightSetting_Sprint.FlyWarkSpeed;
-		OwnerPlayer->GetCharacterMovement()->MaxFlySpeed = FlightSetting_Sprint.FlySpeed;
-		OwnerPlayer->GetCharacterMovement()->MaxAcceleration = FlightSetting_Sprint.MaxAcceleration;
-		OwnerPlayer->GetCharacterMovement()->RotationRate = FlightSetting_Sprint.RotationRate;
+		OwnerPlayer->GetCharacterMovement()->MaxWalkSpeed = FlightDataAsset->FlightSetting_Sprint.FlyWarkSpeed;
+		OwnerPlayer->GetCharacterMovement()->MaxFlySpeed = FlightDataAsset->FlightSetting_Sprint.FlySpeed;
+		OwnerPlayer->GetCharacterMovement()->MaxAcceleration = FlightDataAsset->FlightSetting_Sprint.MaxAcceleration;
+		OwnerPlayer->GetCharacterMovement()->RotationRate = FlightDataAsset->FlightSetting_Sprint.RotationRate;
 		
 		SetActiveComponent(Flight_Wave_Ref, input, input);	
 

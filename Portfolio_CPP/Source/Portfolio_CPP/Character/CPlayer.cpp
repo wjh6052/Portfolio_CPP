@@ -1,7 +1,7 @@
 #include "CPlayer.h"
 #include "../Global.h"
 
-#include "../Datas/DataAsset/CActionDataAsset.h"
+#include "../Datas/DataAsset/CharacterDataAsset.h"
 #include "Components/SkeletalMeshComponent.h"
 
 
@@ -209,8 +209,8 @@ void ACPlayer::OnSprint()
 	CheckFalse(GetStatComponent()->IsState(EStateType::Idling));
 
 
-	CheckNull(ActionDataAsset);
-	PlayAnimMontage(ActionDataAsset->RollAnimMontage.AnimMontage, ActionDataAsset->RollAnimMontage.PlayRate);
+	CheckNull(GetStatComponent()->GetCharacterDataAsset());
+	PlayAnimMontage(GetStatComponent()->GetCharacterDataAsset()->RollAnimMontage.AnimMontage, GetStatComponent()->GetCharacterDataAsset()->RollAnimMontage.PlayRate);
 }
 
 void ACPlayer::OffSprint()

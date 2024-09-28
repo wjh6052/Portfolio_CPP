@@ -2,60 +2,11 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "../../Datas/DataAsset/CharacterDataAsset.h"
 #include "CStatComponent.generated.h"
 
 
-//--struct---------------------------------------------------------------------
 
-USTRUCT(Atomic, BlueprintType)
-struct FStat
-{
-	GENERATED_BODY()
-
-public:
-	UPROPERTY(EditAnywhere)
-		float HP = 100;
-	UPROPERTY(EditAnywhere)
-		float HP_Max = 100;
-	UPROPERTY(EditAnywhere)
-		float Damage = 10;
-	UPROPERTY(EditAnywhere)
-		float Defense = 5;
-	UPROPERTY(EditAnywhere)
-		float Critical_Damage = 1.5;
-	UPROPERTY(EditAnywhere)
-		float Critical_Chance = 20;
-
-	//무적모드
-	UPROPERTY(EditAnywhere)
-		bool God_Mode = false;
-};
-
-USTRUCT(Atomic, BlueprintType)
-struct FSpeed
-{
-	GENERATED_BODY()
-
-public:
-	UPROPERTY(EditAnywhere)
-		float Stop = 0;
-	UPROPERTY(EditAnywhere)
-		float Walk = 200;
-	UPROPERTY(EditAnywhere)
-		float Joging = 400;
-	UPROPERTY(EditAnywhere)
-		float Run = 600;
-
-	UPROPERTY(EditAnywhere)
-		float FlyWarkSpeed = 600.f;
-	UPROPERTY(EditAnywhere)
-		float MaxAcceleration = 2048.f;
-	UPROPERTY(EditAnywhere)
-		float BrakingDeceleration = 0;
-	UPROPERTY(EditAnywhere)
-		FRotator RotationRate = FRotator(0.f, 720.f, 0.f);
-
-};
 
 
 //--enum---------------------------------------------------------------------
@@ -124,6 +75,8 @@ public:
 	FORCEINLINE EStatusType GetStatusType() const { return StatusType; }
 	FORCEINLINE ESpeedType GetSpeedType() const { return SpeedType; }
 
+	FORCEINLINE UCharacterDataAsset* GetCharacterDataAsset() const { return CharacterDataAsset; }
+
 
 	//set
 	FORCEINLINE void SetSprint(bool input) { bSprint = input; }
@@ -166,6 +119,9 @@ public:
 	void SetSpeed(ESpeedType input);
 
 
+private:
+	UPROPERTY(EditAnywhere, Category = "Data")
+		class UCharacterDataAsset* CharacterDataAsset;
 
 
 public:
@@ -174,6 +130,7 @@ public:
 	//현재의 상태를 조절하는 열거형
 	EStateType StateType;
 	EStatusType StatusType;
+
 	UPROPERTY(BlueprintReadOnly)
 	ESpeedType SpeedType;
 
@@ -186,4 +143,9 @@ public:
 
 	bool bCanMove = true;
 	bool bCameraCanMove = true;
+
+
+private:
+	//무적모드
+	bool God_Mode = false;
 };

@@ -6,12 +6,54 @@
 #include "CFlightDataAsset.generated.h"
 
 
+
+USTRUCT(BlueprintType)
+struct FFlightSetting
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditAnywhere)
+		float FlyWarkSpeed = 600.f;
+	UPROPERTY(EditAnywhere)
+		float MaxAcceleration = 2048.f;
+	UPROPERTY(EditAnywhere)
+		float BrakingDeceleration = 4096.0;
+	UPROPERTY(EditAnywhere)
+		FRotator RotationRate = FRotator(0.f, 540.f, 0.f);
+};
+
+USTRUCT(BlueprintType)
+struct FFlightSetting_Sprint
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditAnywhere)
+		float FlyWarkSpeed = 1000.f;
+	UPROPERTY(EditAnywhere)
+		float FlySpeed = 4096.f;
+	UPROPERTY(EditAnywhere)
+		float MaxAcceleration = 20480.f;
+	UPROPERTY(EditAnywhere)
+		float BrakingDeceleration = 4096.0;
+	UPROPERTY(EditAnywhere)
+		FRotator RotationRate = FRotator(0.f, 720.f, 0.f);
+};
+
+
+
 UCLASS()
 class PORTFOLIO_CPP_API UCFlightDataAsset : public UDataAsset
 {
 	GENERATED_BODY()
 
 public:
+
+	UPROPERTY(EditAnywhere, Category = "FlightData")
+		FFlightSetting FlightSetting;
+	UPROPERTY(EditAnywhere, Category = "FlightData")
+		FFlightSetting_Sprint FlightSetting_Sprint;
+
+
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Flight_Trail")
 		class UNiagaraSystem* Flight_Trail;
 

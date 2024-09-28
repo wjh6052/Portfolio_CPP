@@ -27,7 +27,7 @@ ABaseCharacter::ABaseCharacter()
 
 
 	//Create Actor Component
-	StatComp = CreateDefaultSubobject<UCStatComponent>(L"StatComponent");
+	StatComponent = CreateDefaultSubobject<UCStatComponent>(L"StatComponent");
 
 	
 

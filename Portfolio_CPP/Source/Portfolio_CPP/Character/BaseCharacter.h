@@ -36,9 +36,7 @@ public:
 
 public:	
 	//Get
-	FORCEINLINE FSpeed GetBaseSpeed() const { return BaseSpeed; }
-	FORCEINLINE FStat GetBaseStat() const { return BaseStat; }
-	FORCEINLINE class UCStatComponent* GetStatComponent() const { return StatComp; }
+	FORCEINLINE class UCStatComponent* GetStatComponent() const { return StatComponent; }
 
 	//Set
 	
@@ -76,7 +74,7 @@ public:
 private:
 	//Actor Component
 	UPROPERTY(Category = Component, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		TObjectPtr<UCStatComponent> StatComp;
+		TObjectPtr<UCStatComponent> StatComponent;
 
 
 protected:
@@ -88,11 +86,6 @@ private:
 	
 
 
-	//Speed
-	UPROPERTY(EditAnywhere, Category = "Speed")
-		FSpeed BaseSpeed;
-	//Stat
-	UPROPERTY(EditAnywhere, Category = "Stat")
-		FStat BaseStat;
+	
 
 };

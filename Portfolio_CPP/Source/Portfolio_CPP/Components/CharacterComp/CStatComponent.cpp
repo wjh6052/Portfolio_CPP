@@ -18,8 +18,6 @@ void UCStatComponent::BeginPlay()
 	
 	
 
-	OwnerCharacter->GetBaseStat() = Stat;
-	OwnerCharacter->GetBaseSpeed() = Speed;
 
 	SetSpeed(ESpeedType::Joging);
 	

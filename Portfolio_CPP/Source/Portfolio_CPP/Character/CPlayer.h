@@ -53,6 +53,5 @@ private:
 	FTimerHandle RunTimer;
 
 
-	UPROPERTY(EditAnywhere, Category = "ActionDataAsset")
-		class UCActionDataAsset* ActionDataAsset;
+
 };
