@@ -43,6 +43,9 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ACPlayer::OnMoveForward(float InAxis)
 {	
+	if(GetStatComponent()->IsStatus(EStatusType::Flight) && GetFlightComponent()->GetSprint())
+		GetFlightComponent()->OnMoveForward_Flight(1);
+
 	Super::OnMoveForward(InAxis);
 
 
@@ -203,6 +206,7 @@ void ACPlayer::OnSprint()
 	{
 		GetFlightComponent()->SetSprint(GetStatComponent()->GetSprint());
 
+		
 		return;
 	}
 
