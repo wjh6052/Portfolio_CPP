@@ -43,7 +43,8 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ACPlayer::OnMoveForward(float InAxis)
 {	
-	Super::OnMoveRight(InAxis);
+	Super::OnMoveForward(InAxis);
+
 
 	if (InAxis == 0.f)
 	{
@@ -166,8 +167,6 @@ void ACPlayer::OnWalk()
 		GetStatComponent()->SetSpeed(ESpeedType::Joging);
 		break;
 
-
-
 	default:
 		GetStatComponent()->SetSpeed(ESpeedType::Walk);
 		break;
@@ -198,11 +197,11 @@ void ACPlayer::RunDelay()
 
 void ACPlayer::OnSprint()
 {
-	SetSprint(true);
+	GetStatComponent()->SetSprint(true);
 
 	if (GetStatComponent()->IsStatus(EStatusType::Flight))
 	{
-		GetFlightComponent()->SetSprint(GetSprint());
+		GetFlightComponent()->SetSprint(GetStatComponent()->GetSprint());
 
 		return;
 	}
@@ -216,11 +215,11 @@ void ACPlayer::OnSprint()
 
 void ACPlayer::OffSprint()
 {
-	SetSprint(false);
+	GetStatComponent()->SetSprint(false);
 
 	if (GetStatComponent()->IsStatus(EStatusType::Flight) && GetFlightComponent()->GetSprint())
 	{
-		GetFlightComponent()->SetSprint(GetSprint());
+		GetFlightComponent()->SetSprint(GetStatComponent()->GetSprint());
 
 		return;
 	}

@@ -4,6 +4,7 @@
 
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
+#include "NiagaraDataInterfaceArrayFunctionLibrary.h"
 #include "Materials/MaterialInstanceDynamic.h"
 
 
@@ -11,7 +12,6 @@
 
 ACWings::ACWings()
 {
-	PrimaryActorTick.bCanEverTick = true;
 	
 	CHelpers::CreateSceneComponent(this, &SkeletalMesh, "SkeletalMesh", GetRootComponent());
 }
@@ -22,40 +22,36 @@ void ACWings::BeginPlay()
 
 	OwnerPlayer = Cast<ACPlayer>(GetOwner());
 	CheckNull(OwnerPlayer);
-	OwnerPlayer->GetFlightComponent();
+
 	
 	if(Wings_Trail != nullptr)
-		Wings_TrailComp = UNiagaraFunctionLibrary::SpawnSystemAttached
+	Wings_TrailComp = UNiagaraFunctionLibrary::SpawnSystemAttached
 		(
 			Wings_Trail,
-			OwnerPlayer->GetMesh(),
-			TEXT("Center"),
+			SkeletalMesh,
+			"Center",
 			FVector::ZeroVector,
 			FRotator(0.f, -90.f, 0.f),
-			FVector(0, 0, 0),
+			FVector(10, 10, 10),
 			EAttachLocation::Type::KeepRelativeOffset,
-			true,
+			false,
 			ENCPoolMethod::None,
-			true,
-			false
+			false,
+			true
 		);
+	Wings_TrailComp->SetActive(false);
 
-	CheckNull(SkeletalMesh);
-	UMaterialInstanceDynamic::Create(WingsDynamicMaterial, SkeletalMesh->GetMaterial(0));
 
-	if(Dissolve_Inst != nullptr)
-		UMaterialInstanceDynamic::Create(DissolveMaterial, Dissolve_Inst);
 
-	
-	
+	//Material
+	if(SkeletalMesh != nullptr)
+		WingsDynamicMaterial = UMaterialInstanceDynamic::Create(SkeletalMesh->GetMaterial(0), this);
 
+	if(Dissolve_Instance != nullptr)
+		DissolveMaterial = UMaterialInstanceDynamic::Create(Dissolve_Instance, this);
 }
 
-void ACWings::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 
-}
 
 void ACWings::AttachTo(FName InSocketName)
 {
@@ -72,9 +68,9 @@ void ACWings::AttachTo(FName InSocketName)
 
 void ACWings::SetSprint(bool input)
 {
-	bSprint = input;
+	bWings_Sprint = input;
 
-	//Wings_TrailComp->SetActive(bSprint, bSprint);
+	Wings_TrailComp->SetActive(input);
 
 	if (input)
 	{
@@ -86,12 +82,16 @@ void ACWings::SetSprint(bool input)
 	}
 }
 
+void ACWings::SetWingsMove(float input)
+{
+	Wing_L = FVector(0.f, input * 50, input * 30);
+	Wing_R = FVector(0.f, input * 50, input * 30);
+}
+
 void ACWings::SpawnWings(bool input)
 {
-	bSpawnWings = input;
-
-	SetActorHiddenInGame(!bSpawnWings);
-
-	SpawnWingsImpact(bSpawnWings);
+	bWings_Spawn = input;
+	
+	SpawnWingsImpact();
 }
 

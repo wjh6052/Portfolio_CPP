@@ -110,6 +110,8 @@ protected:
 
 public:
 	//get
+	FORCEINLINE bool GetSprint() const { return bSprint; }
+
 	FORCEINLINE float GetHP() const { return Stat.HP; }
 	FORCEINLINE float GetHP_Max() const { return Stat.HP_Max; }
 	FORCEINLINE float GetDamage() const { return Stat.Damage; }
@@ -124,6 +126,10 @@ public:
 
 
 	//set
+	FORCEINLINE void SetSprint(bool input) { bSprint = input; }
+	FORCEINLINE void SetCanMove(bool input) { bCanMove = input; }
+	FORCEINLINE void SetCameraCanMove(bool input) { bCameraCanMove = input; }
+
 	FORCEINLINE void SetHP(float input) { Stat.HP += input; }
 	FORCEINLINE void SetHP_Max(float input) { Stat.HP_Max += input; }
 	FORCEINLINE void SetDamage(float input) { Stat.Damage += input; }
@@ -139,8 +145,7 @@ public:
 	FORCEINLINE void SetStatusType(EStatusType input) { StatusType = input; }
 	FORCEINLINE void SetSpeedType(ESpeedType input) { SpeedType = input; }
 
-	FORCEINLINE void SetCanMove(bool input) { bCanMove = input; }
-	FORCEINLINE void SetCameraCanMove(bool input) { bCameraCanMove = input; }
+	
 
 
 	//Is
@@ -174,6 +179,10 @@ public:
 
 	FStat Stat;
 	FSpeed Speed;
+
+
+	bool bSprint = false;
+
 
 	bool bCanMove = true;
 	bool bCameraCanMove = true;

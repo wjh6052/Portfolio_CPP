@@ -122,7 +122,7 @@ void UCFlightComponent::OnMoveForward_Flight(float InAxis)
 
 void UCFlightComponent::OnMoveRight_Flight(float InAxis)
 {
-	CheckTrue(OwnerPlayer->GetSprint());
+	CheckTrue(OwnerPlayer->GetStatComponent()->GetSprint());
 
 
 	FVector direction = UKismetMathLibrary::GetRightVector(FRotator(0, OwnerPlayer->GetControlRotation().Yaw, 0));
@@ -166,8 +166,7 @@ void UCFlightComponent::StartFlight()
 
 	if (Wings != nullptr)
 	{
-		Wings->SpawnWings(Flight_bFlying);
-		
+		Wings->SpawnWings(Flight_bFlying);	
 	}
 
 
@@ -190,19 +189,30 @@ void UCFlightComponent::EndFlight()
 	SetFlying(Flight_bFlying);
 	SetFlightMovementParam(Flight_bFlying);
 
-	HitReset();
+	HitReset(); 
 
 
 	if (Wings != nullptr)
 	{
 		Wings->SpawnWings(Flight_bFlying);
-		
+	
 	}
 		
 
-	
+	SetSprint(Flight_bFlying); // Sprint 속도 되돌리기
 
-	SetSprint(Flight_bFlying);
+
+
+	switch (OwnerPlayer->GetStatComponent()->GetSpeedType()) // 이동 속도 되돌리기
+	{
+	case ESpeedType::Joging:
+		OwnerPlayer->GetStatComponent()->SetSpeed(ESpeedType::Joging);
+		break;
+
+	case ESpeedType::Walk:
+		OwnerPlayer->GetStatComponent()->SetSpeed(ESpeedType::Walk);
+		break;
+	}
 }
 
 void UCFlightComponent::SetSprint(bool input)
@@ -216,7 +226,8 @@ void UCFlightComponent::SetSprint(bool input)
 	OwnerPlayer->GetCharacterMovement()->bUseControllerDesiredRotation = input;
 	OwnerPlayer->GetCharacterMovement()->bOrientRotationToMovement = !input;
 
-	
+	if(Wings != nullptr)
+		Wings->SetSprint(input);
 
 	if (input)
 	{
@@ -227,6 +238,7 @@ void UCFlightComponent::SetSprint(bool input)
 		
 		SetActiveComponent(Flight_Wave_Ref, input, input);	
 
+		CheckFalse(Flight_bFlying);
 		StopToPlayAnim(&FlightDataAsset->FastMove_Start);
 	}
 	else
@@ -239,6 +251,7 @@ void UCFlightComponent::SetSprint(bool input)
 		SetActiveComponent(Flight_Wave_Ref, input, input);
 
 
+		CheckFalse(Flight_bFlying);
 		if (Flight_bLanding)
 		{
 			StopToPlayAnim(&FlightDataAsset->Landing);
@@ -251,9 +264,7 @@ void UCFlightComponent::SetSprint(bool input)
 		}
 
 	}
-
-	if (Wings != nullptr)
-		Wings->SetSprint(input);
+		
 
 	
 }
@@ -335,8 +346,6 @@ void UCFlightComponent::HitEvent(bool input)
 		CheckTrue(HitReset_True);
 		HitReset_True = true;
 
-		CLog::Print("1");
-
 		Flight_bLanding = true;
 		SetSprint(false);
 		EndFlight();
@@ -351,7 +360,6 @@ void UCFlightComponent::HitEvent(bool input)
 		CheckTrue(HitReset_False);
 		HitReset_False = true;
 
-		CLog::Print("2");
 
 
 		Flight_bLanding = true;

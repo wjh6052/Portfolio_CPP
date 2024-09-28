@@ -16,7 +16,6 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	virtual void Tick(float DeltaTime) override;
 
 	void SpawnWings(bool input);
 	void AttachTo(FName InSocketName);
@@ -24,35 +23,69 @@ public:
 	void SetSprint(bool input);
 
 
-	UFUNCTION(BlueprintImplementableEvent)
-		void SpawnWingsImpact(bool input);
+
+
+	UFUNCTION(BlueprintCallable)
+		FORCEINLINE void WingsMoveReset() { Wing_L = FVector::ZeroVector; Wing_R = FVector::ZeroVector; }
+
+
+	UFUNCTION(BlueprintCallable)
+		void SetWingsMove(float input);
+
+	
+
+public:	// 블루프린트에서 호출될 이벤트
 
 	UFUNCTION(BlueprintImplementableEvent)
+		void SpawnWingsImpact();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 		void WingsMove();
 
 	UFUNCTION(BlueprintImplementableEvent)
 		void WingsStop();
+
 	
-public:
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Wings_Trail")
-		class UNiagaraSystem* Wings_Trail;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Wings_Trail")
-		class UMaterialInstance* Dissolve_Inst;
+protected:
 
-private:
-	UPROPERTY(VisibleDefaultsOnly)
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
 		class USkeletalMeshComponent* SkeletalMesh;
-	
-	
-private:
-	UPROPERTY(EditAnywhere)
+
+
+	UPROPERTY(BlueprintReadOnly)
 		class UMaterialInstanceDynamic* WingsDynamicMaterial;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(BlueprintReadOnly)
 		class UMaterialInstanceDynamic* DissolveMaterial;
 
-	class UNiagaraComponent* Wings_TrailComp;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Sawpn")
+		class UNiagaraComponent* Wings_TrailComp;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Sawpn")
+		bool bWings_Sprint;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Sawpn")
+		bool bWings_Spawn;
+
+
+public:
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Wings_Trail")
+		TObjectPtr<class UNiagaraSystem> Wings_Trail;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Wings_Trail")
+		class UMaterialInterface* Dissolve_Instance;
+
+	
+	
+private:
 	class ACPlayer* OwnerPlayer;
-	bool bSprint;
-	bool bSpawnWings;
+
+	
+
+	
+
+	FVector Wing_L;
+	FVector Wing_R;
+
 };

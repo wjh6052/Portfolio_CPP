@@ -13,7 +13,8 @@ public class Portfolio_CPP : ModuleRules
 			"CoreUObject",
 			"Engine",
 			"InputCore",
-			"Niagara"
+			"Niagara",
+			"AnimGraphRuntime"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
