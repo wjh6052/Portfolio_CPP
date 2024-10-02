@@ -26,6 +26,8 @@ void UCStatComponent::BeginPlay()
 
 void UCStatComponent::SetSpeed(ESpeedType input)
 {	
+	CheckNull(OwnerCharacter);
+
 	switch (input)
 	{
 	case ESpeedType::Stop:

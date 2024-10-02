@@ -55,6 +55,14 @@ public:
 
 	void HitEvent(bool input);
 
+
+
+public: //notify
+	bool NotifiLineTracetoUpVector(float vectorLength, FHitResult& hitResult);
+	UNiagaraSystem* GetLnadingVFX(EPhysicalSurface input);
+	UNiagaraComponent* SpawnNiagaraAtLocationOrAttach(bool isAttach, UNiagaraSystem* SystemTemplate, USceneComponent* AttachToComponent, FVector Location, FRotator Rotation);
+
+
 private:
 	UPROPERTY(EditAnywhere, Category = "Data")
 		class UCFlightDataAsset* FlightDataAsset;

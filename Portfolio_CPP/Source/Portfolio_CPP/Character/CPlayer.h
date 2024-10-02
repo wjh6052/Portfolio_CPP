@@ -44,7 +44,7 @@ public:
 
 protected:
 	//Actor Component
-	UPROPERTY(Category = Component, VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = Component, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		TObjectPtr<UCFlightComponent> FlightComponent;
 
 

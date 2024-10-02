@@ -4,8 +4,10 @@
 #include "../../../Datas/DataAsset/BaseDataAsset.h"
 #include "../../../Datas/DataAsset/CFlightDataAsset.h"
 
+
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Kismet/KismetSystemLibrary.h" 
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 
@@ -372,4 +374,75 @@ void UCFlightComponent::HitEvent(bool input)
 
 
 
+bool UCFlightComponent::NotifiLineTracetoUpVector(float vectorLength, FHitResult& hitResult)
+{
+	if (OwnerPlayer == nullptr)
+		return false;
+	FVector start = OwnerPlayer->GetActorLocation();
+	FVector end = (OwnerPlayer->GetActorUpVector() * vectorLength) + start;
+	TArray<AActor*> ignores;
+	ignores.Add(OwnerPlayer);
+	bool bRetrunValue = UKismetSystemLibrary::LineTraceSingle
+	(
+		GetWorld(),
+		start,
+		end,
+		UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_Visibility),
+		false,
+		ignores,
+		EDrawDebugTrace::None,
+		hitResult,
+		true,
+		FLinearColor::Red,
+		FLinearColor::Green,
+		5.f
+	);
+	return bRetrunValue;
+}
+UNiagaraSystem* UCFlightComponent::GetLnadingVFX(EPhysicalSurface input)
+{
+	switch (input)
+	{
+	case SurfaceType_Default:
+		if (FlightDataAsset->Lnading_Concrete != nullptr)
+			return FlightDataAsset->Lnading_Concrete;
+		break;
+	case SurfaceType1:
+		if (FlightDataAsset->Lnading_Concrete != nullptr)
+			return FlightDataAsset->Lnading_Concrete;
+		break;
+	case SurfaceType2:
+		if (FlightDataAsset->Lnading_Ground != nullptr)
+			return FlightDataAsset->Lnading_Ground;
+		break;
+	case SurfaceType3:
+		if (FlightDataAsset->Lnading_Grass != nullptr)
+			return FlightDataAsset->Lnading_Grass;
+		break;
+	case SurfaceType4:
+		if (FlightDataAsset->Lnading_Sand != nullptr)
+			return FlightDataAsset->Lnading_Sand;
+		break;
+	case SurfaceType5:
+		if (FlightDataAsset->Lnading_Water != nullptr)
+			return FlightDataAsset->Lnading_Water;
+		break;
+	default:
+		if (FlightDataAsset->Lnading_Concrete != nullptr)
+			return FlightDataAsset->Lnading_Concrete;
+		break;
+	}
 
+	return nullptr;
+}
+UNiagaraComponent* UCFlightComponent::SpawnNiagaraAtLocationOrAttach(bool isAttach, UNiagaraSystem* SystemTemplate, USceneComponent* AttachToComponent, FVector Location, FRotator Rotation)
+{
+	if (isAttach)
+	{
+		return UNiagaraFunctionLibrary::SpawnSystemAttached(SystemTemplate, AttachToComponent, L"", Location, Rotation, EAttachLocation::KeepRelativeOffset, true, true);
+	}
+	else
+	{
+		return UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), SystemTemplate, Location, Rotation, FVector(1.f, 1.f, 1.f));
+	}
+}

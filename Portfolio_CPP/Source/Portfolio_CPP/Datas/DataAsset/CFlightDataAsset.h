@@ -54,6 +54,7 @@ public:
 		FFlightSetting_Sprint FlightSetting_Sprint;
 
 
+
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Flight_Trail")
 		class UNiagaraSystem* Flight_Trail;
 
@@ -65,6 +66,7 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Flight_Trail")
 		FVector Flight_Trail_Scale = FVector(1.f, 1.f, 1.f);
+
 
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Flight_Wave")
@@ -79,11 +81,29 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Flight_Wave")
 		FVector Flight_Wave_Scale = FVector(1.f, 1.f, 1.f);
 
+
+
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "FlightUnderDust")
 		TArray <class UNiagaraSystem*> FlightUnderDust;
 
+
+
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "SuperheroLnading")
-		TArray <class UNiagaraSystem*> SuperheroLnading;
+		class UNiagaraSystem* Lnading_Concrete;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "SuperheroLnading")
+		class UNiagaraSystem* Lnading_Ground;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "SuperheroLnading")
+		class UNiagaraSystem* Lnading_Grass;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "SuperheroLnading")
+		class UNiagaraSystem* Lnading_Sand;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "SuperheroLnading")
+		class UNiagaraSystem* Lnading_Water;
+
+
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "AnimMontage")
 		struct FAnimMontageBase Hover_Start;
