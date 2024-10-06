@@ -17,7 +17,6 @@ void ACPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	CharacterType = ECharacterType::Player;
-	GetStatComponent()->SetSpeed(ESpeedType::Joging);
 	
 	
 }

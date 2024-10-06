@@ -47,14 +47,35 @@ class PORTFOLIO_CPP_API UCFlightDataAsset : public UDataAsset
 	GENERATED_BODY()
 
 public:
-
-	UPROPERTY(EditAnywhere, Category = "FlightData")
+	//----------------------FlightSpeed--------------------------
+	UPROPERTY(EditAnywhere, Category = "FlightSpeed")
 		FFlightSetting FlightSetting;
-	UPROPERTY(EditAnywhere, Category = "FlightData")
+
+	UPROPERTY(EditAnywhere, Category = "FlightSpeed")
 		FFlightSetting_Sprint FlightSetting_Sprint;
 
 
+	//----------------Sprint_FlightUnderDust----------------------
+	UPROPERTY(EditAnywhere, Category = "Sprint_FlightUnderDust")
+		bool bOnFlightUnderDust = true;
 
+	UPROPERTY(EditAnywhere, Category = "Sprint_FlightUnderDust")
+		float FlightUnderDustLength = -1000.f;
+
+
+	//----------------------AnimMontage--------------------------
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "AnimMontage")
+		struct FAnimMontageBase Hover_Start;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "AnimMontage")
+		struct FAnimMontageBase FastMove_Start;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "AnimMontage")
+		struct FAnimMontageBase Landing;
+
+
+
+	//----------------------Flight_Trail--------------------------
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Flight_Trail")
 		class UNiagaraSystem* Flight_Trail;
 
@@ -69,6 +90,7 @@ public:
 
 
 
+	//----------------------Flight_Wave--------------------------
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Flight_Wave")
 		class UNiagaraSystem* Flight_Wave;
 
@@ -83,11 +105,13 @@ public:
 
 
 
+	//----------------------FlightUnderDust--------------------------
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "FlightUnderDust")
 		TArray <class UNiagaraSystem*> FlightUnderDust;
 
 
 
+	//----------------------SuperheroLnading--------------------------
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "SuperheroLnading")
 		class UNiagaraSystem* Lnading_Concrete;
 
@@ -105,12 +129,6 @@ public:
 
 
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "AnimMontage")
-		struct FAnimMontageBase Hover_Start;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "AnimMontage")
-		struct FAnimMontageBase FastMove_Start;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "AnimMontage")
-		struct FAnimMontageBase Landing;
+	
 };

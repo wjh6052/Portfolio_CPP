@@ -57,7 +57,7 @@ public:
 
 
 
-public: //notify
+public: //-----------------------------------------Notifi-----------------------------------------
 	bool NotifiLineTracetoUpVector(float vectorLength, FHitResult& hitResult);
 	UNiagaraSystem* GetLnadingVFX(EPhysicalSurface input);
 	UNiagaraComponent* SpawnNiagaraAtLocationOrAttach(bool isAttach, UNiagaraSystem* SystemTemplate, USceneComponent* AttachToComponent, FVector Location, FRotator Rotation);

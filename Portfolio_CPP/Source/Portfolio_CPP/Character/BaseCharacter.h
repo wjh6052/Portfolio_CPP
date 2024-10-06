@@ -71,7 +71,7 @@ public:
 		class UCameraComponent* Camera;
 
 
-private:
+protected:
 	//Actor Component
 	UPROPERTY(Category = Component, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		TObjectPtr<UCStatComponent> StatComponent;

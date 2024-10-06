@@ -15,9 +15,6 @@ UCStatComponent::UCStatComponent()
 void UCStatComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	
-
 
 	SetSpeed(ESpeedType::Joging);
 	
@@ -32,22 +29,22 @@ void UCStatComponent::SetSpeed(ESpeedType input)
 	{
 	case ESpeedType::Stop:
 		SetSpeedType(ESpeedType::Stop);
-		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = Speed.Stop;
+		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = GetCharacterDataAsset()->Speed.Stop;
 		break;
 
 	case ESpeedType::Walk:
 		SetSpeedType(ESpeedType::Walk);
-		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = Speed.Walk;
+		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = GetCharacterDataAsset()->Speed.Walk;
 		break;
 
 	case ESpeedType::Joging:
 		SetSpeedType(ESpeedType::Joging);
-		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = Speed.Joging;
+		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = GetCharacterDataAsset()->Speed.Joging;
 		break;
 
 	case ESpeedType::Run:
 		SetSpeedType(ESpeedType::Run);
-		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = Speed.Run;
+		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = GetCharacterDataAsset()->Speed.Run;
 		break;
 
 	case ESpeedType::Sprint:

@@ -153,8 +153,8 @@ void UCFlightComponent::SetFlightMovementParam(bool input)
 	}
 	else
 	{
-		OwnerPlayer->GetCharacterMovement()->BrakingDecelerationFlying = OwnerPlayer->GetStatComponent()->Speed.BrakingDeceleration;
-		OwnerPlayer->GetCharacterMovement()->RotationRate = OwnerPlayer->GetStatComponent()->Speed.RotationRate;
+		OwnerPlayer->GetCharacterMovement()->BrakingDecelerationFlying = OwnerPlayer->GetStatComponent()->GetCharacterDataAsset()->Speed.BrakingDeceleration;
+		OwnerPlayer->GetCharacterMovement()->RotationRate = OwnerPlayer->GetStatComponent()->GetCharacterDataAsset()->Speed.RotationRate;
 	}
 }
 
@@ -245,14 +245,16 @@ void UCFlightComponent::SetSprint(bool input)
 	}
 	else
 	{
-		OwnerPlayer->GetCharacterMovement()->MaxWalkSpeed = OwnerPlayer->GetStatComponent()->Speed.FlyWarkSpeed;
-		OwnerPlayer->GetCharacterMovement()->MaxFlySpeed = OwnerPlayer->GetStatComponent()->Speed.FlyWarkSpeed;
-		OwnerPlayer->GetCharacterMovement()->MaxAcceleration = OwnerPlayer->GetStatComponent()->Speed.MaxAcceleration;
-		OwnerPlayer->GetCharacterMovement()->RotationRate = OwnerPlayer->GetStatComponent()->Speed.RotationRate;
+		OwnerPlayer->GetCharacterMovement()->MaxWalkSpeed = OwnerPlayer->GetStatComponent()->GetCharacterDataAsset()->Speed.FlyWarkSpeed;
+		OwnerPlayer->GetCharacterMovement()->MaxFlySpeed = OwnerPlayer->GetStatComponent()->GetCharacterDataAsset()->Speed.FlyWarkSpeed;
+		OwnerPlayer->GetCharacterMovement()->MaxAcceleration = OwnerPlayer->GetStatComponent()->GetCharacterDataAsset()->Speed.MaxAcceleration;
+		OwnerPlayer->GetCharacterMovement()->RotationRate = OwnerPlayer->GetStatComponent()->GetCharacterDataAsset()->Speed.RotationRate;
 
 		SetActiveComponent(Flight_Wave_Ref, input, input);
 
 
+
+		
 		CheckFalse(Flight_bFlying);
 		if (Flight_bLanding)
 		{
@@ -374,6 +376,9 @@ void UCFlightComponent::HitEvent(bool input)
 
 
 
+
+//-----------------------------------------Notifi-----------------------------------------
+
 bool UCFlightComponent::NotifiLineTracetoUpVector(float vectorLength, FHitResult& hitResult)
 {
 	if (OwnerPlayer == nullptr)
@@ -399,6 +404,7 @@ bool UCFlightComponent::NotifiLineTracetoUpVector(float vectorLength, FHitResult
 	);
 	return bRetrunValue;
 }
+
 UNiagaraSystem* UCFlightComponent::GetLnadingVFX(EPhysicalSurface input)
 {
 	switch (input)
@@ -435,6 +441,7 @@ UNiagaraSystem* UCFlightComponent::GetLnadingVFX(EPhysicalSurface input)
 
 	return nullptr;
 }
+
 UNiagaraComponent* UCFlightComponent::SpawnNiagaraAtLocationOrAttach(bool isAttach, UNiagaraSystem* SystemTemplate, USceneComponent* AttachToComponent, FVector Location, FRotator Rotation)
 {
 	if (isAttach)
