@@ -22,11 +22,11 @@ void UCAN_SpawnLandingVFX::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenc
 
 	if (hitResult.PhysMaterial != nullptr)
 	{
-		player->GetFlightComponent()->SpawnNiagaraAtLocationOrAttach(false, player->GetFlightComponent()->GetLnadingVFX(hitResult.PhysMaterial->SurfaceType), nullptr, HitPoint, HitNormal);
+		player->GetFlightComponent()->SpawnNiagaraAtLocationOrAttach(false, player->GetFlightComponent()->GetLandingVFX(hitResult.PhysMaterial->SurfaceType), nullptr, HitPoint, HitNormal);
 	}
 	else
 	{
-		player->GetFlightComponent()->SpawnNiagaraAtLocationOrAttach(false, player->GetFlightComponent()->GetLnadingVFX(EPhysicalSurface::SurfaceType_Default), nullptr, HitPoint, HitNormal);
+		player->GetFlightComponent()->SpawnNiagaraAtLocationOrAttach(false, player->GetFlightComponent()->GetLandingVFX(EPhysicalSurface::SurfaceType_Default), nullptr, HitPoint, HitNormal);
 	}
 
 }

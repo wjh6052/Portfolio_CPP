@@ -28,15 +28,15 @@ void UCFlightComponent::BeginPlay()
 	CheckNull(OwnerPlayer);
 
 
-	if (FlightDataAsset != nullptr)
+	if (GetFlightDataAsset() != nullptr)
 	{
 		Flight_Trail_Ref = UNiagaraFunctionLibrary::SpawnSystemAttached
 		(
-			FlightDataAsset->Flight_Trail,
+			GetFlightDataAsset()->Flight_Trail,
 			OwnerPlayer->GetMesh(),
 			TEXT("pelvis"),
-			FlightDataAsset->Flight_Trail_Location,
-			FlightDataAsset->Flight_Trail_Rotation,
+			GetFlightDataAsset()->Flight_Trail_Location,
+			GetFlightDataAsset()->Flight_Trail_Rotation,
 			FVector(0, 0, 0),
 			EAttachLocation::Type::KeepRelativeOffset,
 			true,
@@ -46,12 +46,12 @@ void UCFlightComponent::BeginPlay()
 		);
 		Flight_Wave_Ref = UNiagaraFunctionLibrary::SpawnSystemAttached
 		(
-			FlightDataAsset->Flight_Wave,
+			GetFlightDataAsset()->Flight_Wave,
 			OwnerPlayer->GetRootComponent(),
 			TEXT(""),
-			FlightDataAsset->Flight_Wave_Location,
-			FlightDataAsset->Flight_Wave_Rotation,
-			FVector(0, 0, 0),
+			GetFlightDataAsset()->Flight_Wave_Location,
+			GetFlightDataAsset()->Flight_Wave_Rotation,
+			FVector(1, 1, 1),
 			EAttachLocation::Type::KeepRelativeOffset,
 			true,
 			ENCPoolMethod::None,
@@ -59,21 +59,21 @@ void UCFlightComponent::BeginPlay()
 			false
 		);
 
-		for (int i = 0; i < FlightDataAsset->FlightUnderDust.Num(); i++)
+		for (int i = 0; i < GetFlightDataAsset()->FlightUnderDust_Impact.Num(); i++)
 		{
 			Under_Dust_Ref.Add(UNiagaraFunctionLibrary::SpawnSystemAttached
 			(
-				FlightDataAsset->FlightUnderDust[i],
+				GetFlightDataAsset()->FlightUnderDust_Impact[i],
 				OwnerPlayer->GetRootComponent(),
 				TEXT(""),
 				FVector(0.f, 0.f, -150.f),
 				FRotator().ZeroRotator,
-				FVector(0,0,0),
+				FVector(1,1,1),
 				EAttachLocation::Type::KeepRelativeOffset,
-				true,
+				false,
 				ENCPoolMethod::None,
-				true,
-				false
+				false,
+				true
 			));
 		}
 	}
@@ -120,6 +120,12 @@ void UCFlightComponent::OnMoveForward_Flight(float InAxis)
 	FVector direction = FVector(controlRotation.X, controlRotation.Y, direction_z);
 
 	OwnerPlayer->AddMovementInput(direction, InAxis);
+
+
+	if (Flight_bSprint && GetFlightDataAsset()->bOnFlightUnderDust)
+	{
+		Sprint_FlightUnderDust();
+	}
 }
 
 void UCFlightComponent::OnMoveRight_Flight(float InAxis)
@@ -148,8 +154,8 @@ void UCFlightComponent::SetFlightMovementParam(bool input)
 {
 	if (input)
 	{
-		OwnerPlayer->GetCharacterMovement()->BrakingDecelerationFlying = FlightDataAsset->FlightSetting.BrakingDeceleration;
-		OwnerPlayer->GetCharacterMovement()->RotationRate = FlightDataAsset->FlightSetting.RotationRate;
+		OwnerPlayer->GetCharacterMovement()->BrakingDecelerationFlying = GetFlightDataAsset()->FlightSetting.BrakingDeceleration;
+		OwnerPlayer->GetCharacterMovement()->RotationRate = GetFlightDataAsset()->FlightSetting.RotationRate;
 	}
 	else
 	{
@@ -173,7 +179,7 @@ void UCFlightComponent::StartFlight()
 
 
 	OwnerPlayer->GetCharacterMovement()->bOrientRotationToMovement = true;
-	StopToPlayAnim(&FlightDataAsset->Hover_Start);
+	StopToPlayAnim(&GetFlightDataAsset()->Hover_Start);
 	
 	
 	HitReset();
@@ -233,15 +239,15 @@ void UCFlightComponent::SetSprint(bool input)
 
 	if (input)
 	{
-		OwnerPlayer->GetCharacterMovement()->MaxWalkSpeed = FlightDataAsset->FlightSetting_Sprint.FlyWarkSpeed;
-		OwnerPlayer->GetCharacterMovement()->MaxFlySpeed = FlightDataAsset->FlightSetting_Sprint.FlySpeed;
-		OwnerPlayer->GetCharacterMovement()->MaxAcceleration = FlightDataAsset->FlightSetting_Sprint.MaxAcceleration;
-		OwnerPlayer->GetCharacterMovement()->RotationRate = FlightDataAsset->FlightSetting_Sprint.RotationRate;
+		OwnerPlayer->GetCharacterMovement()->MaxWalkSpeed = GetFlightDataAsset()->FlightSetting_Sprint.FlyWarkSpeed;
+		OwnerPlayer->GetCharacterMovement()->MaxFlySpeed = GetFlightDataAsset()->FlightSetting_Sprint.FlySpeed;
+		OwnerPlayer->GetCharacterMovement()->MaxAcceleration = GetFlightDataAsset()->FlightSetting_Sprint.MaxAcceleration;
+		OwnerPlayer->GetCharacterMovement()->RotationRate = GetFlightDataAsset()->FlightSetting_Sprint.RotationRate;
 		
 		SetActiveComponent(Flight_Wave_Ref, input, input);	
 
 		CheckFalse(Flight_bFlying);
-		StopToPlayAnim(&FlightDataAsset->FastMove_Start);
+		StopToPlayAnim(&GetFlightDataAsset()->FastMove_Start);
 	}
 	else
 	{
@@ -258,13 +264,13 @@ void UCFlightComponent::SetSprint(bool input)
 		CheckFalse(Flight_bFlying);
 		if (Flight_bLanding)
 		{
-			StopToPlayAnim(&FlightDataAsset->Landing);
+			StopToPlayAnim(&GetFlightDataAsset()->Landing);
 			Flight_bLanding = false;
 			return;
 		}
 		else if(Flight_bFlying)
 		{
-			StopToPlayAnim(&FlightDataAsset->Hover_Start);
+			StopToPlayAnim(&GetFlightDataAsset()->Hover_Start);
 		}
 
 	}
@@ -294,6 +300,32 @@ void UCFlightComponent::SetActiveComponent(UActorComponent* Component, bool bNew
 
 }
 
+int UCFlightComponent::GetSurfaceType(EPhysicalSurface SurfaceType)
+{
+	switch (SurfaceType)
+	{
+	case SurfaceType_Default:
+		return 0;
+		break;
+	case SurfaceType1:
+		return 1;
+		break;
+	case SurfaceType2:
+		return 2;
+		break;
+	case SurfaceType3:
+		return 3;
+		break;
+	case SurfaceType4:
+		return 4;
+		break;
+	default:
+		return 0;
+		break;
+	}
+
+	return 0;
+}
 
 
 void UCFlightComponent::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -376,6 +408,50 @@ void UCFlightComponent::HitEvent(bool input)
 
 
 
+//-------------------------------Sprint_FlightUnderDust------------------------------------
+void UCFlightComponent::Sprint_FlightUnderDust()
+{
+	FHitResult hitResult;
+
+	if (NotifiLineTracetoUpVector(GetFlightDataAsset()->FlightUnderDustLength, hitResult))
+	{
+		FVector velocity_Normalize = OwnerPlayer->GetVelocity();
+		UKismetMathLibrary::Vector_Normalize(velocity_Normalize, 0.0001f);
+
+		
+		FRotator hitImpactNormal = FRotator(
+			UKismetMathLibrary::MakeRotFromZX(hitResult.ImpactPoint, OwnerPlayer->GetActorForwardVector()).Pitch,
+			UKismetMathLibrary::Conv_VectorToRotator(velocity_Normalize).Yaw,
+			UKismetMathLibrary::MakeRotFromZX(hitResult.ImpactPoint, OwnerPlayer->GetActorForwardVector()).Roll
+		);
+
+
+
+		CheckNull(GetDustVFX(hitResult.PhysMaterial->SurfaceType));
+		
+		FHitResult SweepHitResult;
+		GetDustVFX(hitResult.PhysMaterial->SurfaceType)->K2_SetWorldLocationAndRotation(hitResult.ImpactPoint, hitImpactNormal, false, SweepHitResult, true);
+
+		GetDustVFX(hitResult.PhysMaterial->SurfaceType)->SetActive(true, true);
+
+	}
+
+	
+}
+
+UNiagaraComponent* UCFlightComponent::GetDustVFX(EPhysicalSurface SurfaceType)
+{
+	
+	if (Under_Dust_Ref[GetSurfaceType(SurfaceType)] != nullptr)
+		return Under_Dust_Ref[GetSurfaceType(SurfaceType)];
+
+	return nullptr;
+}
+
+
+
+
+
 
 //-----------------------------------------Notifi-----------------------------------------
 
@@ -405,39 +481,12 @@ bool UCFlightComponent::NotifiLineTracetoUpVector(float vectorLength, FHitResult
 	return bRetrunValue;
 }
 
-UNiagaraSystem* UCFlightComponent::GetLnadingVFX(EPhysicalSurface input)
+UNiagaraSystem* UCFlightComponent::GetLandingVFX(EPhysicalSurface SurfaceType)
 {
-	switch (input)
-	{
-	case SurfaceType_Default:
-		if (FlightDataAsset->Lnading_Concrete != nullptr)
-			return FlightDataAsset->Lnading_Concrete;
-		break;
-	case SurfaceType1:
-		if (FlightDataAsset->Lnading_Concrete != nullptr)
-			return FlightDataAsset->Lnading_Concrete;
-		break;
-	case SurfaceType2:
-		if (FlightDataAsset->Lnading_Ground != nullptr)
-			return FlightDataAsset->Lnading_Ground;
-		break;
-	case SurfaceType3:
-		if (FlightDataAsset->Lnading_Grass != nullptr)
-			return FlightDataAsset->Lnading_Grass;
-		break;
-	case SurfaceType4:
-		if (FlightDataAsset->Lnading_Sand != nullptr)
-			return FlightDataAsset->Lnading_Sand;
-		break;
-	case SurfaceType5:
-		if (FlightDataAsset->Lnading_Water != nullptr)
-			return FlightDataAsset->Lnading_Water;
-		break;
-	default:
-		if (FlightDataAsset->Lnading_Concrete != nullptr)
-			return FlightDataAsset->Lnading_Concrete;
-		break;
-	}
+	
+	if(GetFlightDataAsset()->Landing_Impact[GetSurfaceType(SurfaceType)] != nullptr)
+		return GetFlightDataAsset()->Landing_Impact[GetSurfaceType(SurfaceType)];
+
 
 	return nullptr;
 }

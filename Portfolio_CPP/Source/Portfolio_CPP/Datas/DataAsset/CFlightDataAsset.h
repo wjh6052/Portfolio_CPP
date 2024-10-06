@@ -107,27 +107,13 @@ public:
 
 	//----------------------FlightUnderDust--------------------------
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "FlightUnderDust")
-		TArray <class UNiagaraSystem*> FlightUnderDust;
+		TArray <class UNiagaraSystem*> FlightUnderDust_Impact;
 
 
 
 	//----------------------SuperheroLnading--------------------------
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "SuperheroLnading")
-		class UNiagaraSystem* Lnading_Concrete;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "SuperheroLnading")
-		class UNiagaraSystem* Lnading_Ground;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "SuperheroLnading")
-		class UNiagaraSystem* Lnading_Grass;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "SuperheroLnading")
-		class UNiagaraSystem* Lnading_Sand;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "SuperheroLnading")
-		class UNiagaraSystem* Lnading_Water;
-
-
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "SuperheroLanding")
+		TArray <class UNiagaraSystem*> Landing_Impact;
 
 
 	

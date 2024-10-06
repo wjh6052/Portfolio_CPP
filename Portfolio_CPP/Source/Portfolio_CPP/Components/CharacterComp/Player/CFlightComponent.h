@@ -27,8 +27,10 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 
-public:
+public: //-----------------------------------------Get-----------------------------------------
 	FORCEINLINE bool GetSprint() const { return Flight_bSprint; }
+	FORCEINLINE class UCFlightDataAsset* GetFlightDataAsset() const { return FlightDataAsset; }
+
 
 public:
 	void OnMoveForward_Flight(float InAxis);
@@ -46,8 +48,10 @@ public:
 	void StopToPlayAnim(struct FAnimMontageBase* inAnimMontage);
 	void SetActiveComponent(class UActorComponent* Component, bool bNewActive, bool bReset);
 	
+	int GetSurfaceType(EPhysicalSurface SurfaceType);
 
-public:
+
+public: //-----------------------------------------HitEvent-----------------------------------------
 	FORCEINLINE void HitReset() { HitReset_True = false; HitReset_False = false; };
 
 	UFUNCTION()
@@ -56,11 +60,23 @@ public:
 	void HitEvent(bool input);
 
 
+public: //-------------------------------Sprint_FlightUnderDust------------------------------------
+	void Sprint_FlightUnderDust();
+
+	UNiagaraComponent* GetDustVFX(EPhysicalSurface SurfaceType);
+
+	
+
 
 public: //-----------------------------------------Notifi-----------------------------------------
 	bool NotifiLineTracetoUpVector(float vectorLength, FHitResult& hitResult);
-	UNiagaraSystem* GetLnadingVFX(EPhysicalSurface input);
+	
+	UNiagaraSystem* GetLandingVFX(EPhysicalSurface SurfaceType);
+
 	UNiagaraComponent* SpawnNiagaraAtLocationOrAttach(bool isAttach, UNiagaraSystem* SystemTemplate, USceneComponent* AttachToComponent, FVector Location, FRotator Rotation);
+
+
+
 
 
 private:
