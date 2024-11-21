@@ -80,8 +80,8 @@ void ABaseCharacter::OnMoveForward(float InAxis)
 
 void ABaseCharacter::OnMoveForward_Unarmed(float InAxis)
 {
-	CheckTrue(FMath::IsNearlyZero(InAxis));
 	CheckFalse(GetStatComponent()->IsCanMove());
+	CheckTrue(FMath::IsNearlyZero(InAxis));
 	FVector direction = FQuat(FRotator(0, GetControlRotation().Yaw, 0)).GetForwardVector().GetSafeNormal2D();
 
 	AddMovementInput(direction, InAxis);
@@ -90,12 +90,13 @@ void ABaseCharacter::OnMoveForward_Unarmed(float InAxis)
 
 void ABaseCharacter::OnMoveRight(float InAxis)
 {
-	CheckTrue(FMath::IsNearlyZero(InAxis));
 	CheckFalse(GetStatComponent()->IsCanMove());
+	CheckTrue(FMath::IsNearlyZero(InAxis));
 }
 
 void ABaseCharacter::OnMoveRight_Unarmed(float InAxis)
 {
+	CheckFalse(GetStatComponent()->IsCanMove());
 	FVector direction = FQuat(FRotator(0, GetControlRotation().Yaw, 0)).GetRightVector().GetSafeNormal2D();
 
 	AddMovementInput(direction, InAxis);

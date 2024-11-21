@@ -200,6 +200,8 @@ void ACPlayer::RunDelay()
 
 void ACPlayer::OnSprint()
 {
+	CheckFalse(GetStatComponent()->IsCanMove());
+
 	GetStatComponent()->SetSprint(true);
 
 	if (GetStatComponent()->IsStatus(EStatusType::Flight))
