@@ -1,11 +1,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "GameFramework/Pawn.h"
 #include "CWings.generated.h"
 
 UCLASS()
-class PORTFOLIO_CPP_API ACWings : public AActor
+class PORTFOLIO_CPP_API ACWings : public APawn
 {
 	GENERATED_BODY()
 	
@@ -22,6 +22,9 @@ public:
 
 	void SetSprint(bool input);
 
+	//Get
+	FORCEINLINE FVector GetWing_L() const{ return Wing_L; }
+	FORCEINLINE FVector GetWing_R() const{ return Wing_R; }
 
 
 
@@ -45,7 +48,7 @@ public:	// 블루프린트에서 호출될 이벤트
 	UFUNCTION(BlueprintImplementableEvent)
 		void WingsStop();
 
-	
+
 
 protected:
 
