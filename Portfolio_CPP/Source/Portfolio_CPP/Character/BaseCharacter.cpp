@@ -118,7 +118,7 @@ void ABaseCharacter::OnCameraZoom(float InAxis)
 
 void ABaseCharacter::OnJump()
 {
-	
+	CheckFalse(GetStatComponent()->IsCanMove());
 	ACharacter::Jump();
 }
 

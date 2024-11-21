@@ -262,6 +262,7 @@ void UCFlightComponent::SetSprint(bool input)
 
 		
 		CheckFalse(Flight_bFlying);
+
 		if (Flight_bLanding)
 		{
 			StopToPlayAnim(&GetFlightDataAsset()->Landing);
