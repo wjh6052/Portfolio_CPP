@@ -122,6 +122,7 @@ void UCFlightComponent::OnMoveForward_Flight(float InAxis)
 	OwnerPlayer->AddMovementInput(direction, InAxis);
 
 
+	// Sprint때 바닥과 상호작용하여 먼지를 일으킴
 	if (Flight_bSprint && GetFlightDataAsset()->bOnFlightUnderDust)
 	{
 		Sprint_FlightUnderDust();
@@ -261,7 +262,7 @@ void UCFlightComponent::SetSprint(bool input)
 
 
 		
-		CheckFalse(Flight_bFlying);
+		
 
 		if (Flight_bLanding)
 		{

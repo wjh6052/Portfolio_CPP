@@ -206,6 +206,7 @@ void ACPlayer::OnSprint()
 
 	if (GetStatComponent()->IsStatus(EStatusType::Flight))
 	{
+		CheckNull(GetFlightComponent());
 		GetFlightComponent()->SetSprint(GetStatComponent()->GetSprint());
 
 		
