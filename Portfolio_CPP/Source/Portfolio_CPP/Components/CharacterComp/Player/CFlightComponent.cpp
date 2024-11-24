@@ -391,6 +391,7 @@ void UCFlightComponent::HitEvent(bool input)
 		//StopToPlayAnim(&FlightDataAsset->Landing);
 
 		
+		//카메라 이동
 		OwnerPlayer->GetController()->SetControlRotation(FRotator(0.f, OwnerPlayer->GetControlRotation().Yaw, OwnerPlayer->GetControlRotation().Roll));
 	}
 	else
@@ -402,9 +403,9 @@ void UCFlightComponent::HitEvent(bool input)
 
 		EndFlight();
 		Flight_bLanding = true;
-		SetSprint(false);
+		//SetSprint(false);
 
-		OwnerPlayer->GetController()->SetControlRotation(FRotator(0.f, OwnerPlayer->GetControlRotation().Yaw, OwnerPlayer->GetControlRotation().Roll));
+		
 	}
 }
 
