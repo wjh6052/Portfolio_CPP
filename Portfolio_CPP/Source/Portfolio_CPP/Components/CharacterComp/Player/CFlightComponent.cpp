@@ -399,9 +399,9 @@ void UCFlightComponent::HitEvent(bool input)
 
 
 
+		EndFlight();
 		Flight_bLanding = true;
 		SetSprint(false);
-		EndFlight();
 
 		OwnerPlayer->GetController()->SetControlRotation(FRotator(0.f, OwnerPlayer->GetControlRotation().Yaw, OwnerPlayer->GetControlRotation().Roll));
 	}
